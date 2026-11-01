@@ -1,4 +1,4 @@
-# sg_core: the DSP core. Plain C++20, no JUCE, no UI, no I/O. Every target
+# sg_core: the DSP core. Plain C++20, no third-party code, no UI, no I/O. Every target
 # (daemon, sg-render, VST3/LV2/Standalone) links this one library.
 add_library(sg_core STATIC
   src/version.cpp)

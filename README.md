@@ -18,9 +18,9 @@ cd ~/.config/omarchy/plugins/<id> && ./install.sh   # builds the engine, no sudo
 
 ## Building from source (developers)
 
-Needs CMake ≥ 3.24, a C++20 compiler, Ninja, and ALSA + JACK headers
-(PipeWire's JACK works at runtime). On Arch: `sudo pacman -S --needed
-base-devel cmake ninja alsa-lib pipewire-jack`.
+Needs CMake ≥ 3.24, a C++20 compiler, Ninja, and the JACK API headers
+(provided on Arch by `pipewire-jack`, which is also what the engine uses at
+runtime). On Arch: `sudo pacman -S --needed base-devel cmake ninja pipewire-jack`.
 
 ```bash
 cmake -S . -B ~/.cache/soundgineer/build -G Ninja -DCMAKE_BUILD_TYPE=Release
@@ -33,13 +33,12 @@ Build outside the repository: when it is installed as an Omarchy plugin,
 the shell reloads the plugin on every file written inside it. CMake refuses
 in-source builds for that reason.
 
-JUCE 9.0.4 is fetched at configure time. To build offline, pass
-`-DFETCHCONTENT_SOURCE_DIR_JUCE=/path/to/JUCE`.
+The build downloads nothing: the engine depends only on the JACK API.
 
 ## Architecture
 
 See [`docs/architecture.md`](docs/architecture.md). In short: `engine/core`
-is a JUCE-free DSP core ported class by class from the TypeScript
+is a dependency-free DSP core ported class by class from the TypeScript
 reference; `soundgineer-engine` runs it headless on PipeWire with MIDI in;
 `plugin/` is the QML bar widget and service that talk to it over a private
 Unix socket ([`docs/protocol.md`](docs/protocol.md)).
@@ -51,5 +50,5 @@ of any kind at runtime.
 
 ## License
 
-MIT, see [`LICENSE`](LICENSE). JUCE-linked binaries carry JUCE's licence
-terms; see [`docs/porting-notes.md`](docs/porting-notes.md#licensing).
+MIT, see [`LICENSE`](LICENSE). Every dependency is MIT-compatible; see
+[`docs/porting-notes.md`](docs/porting-notes.md#licensing).

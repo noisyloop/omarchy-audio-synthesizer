@@ -25,8 +25,8 @@ Research sources (read-only clones, never inside this repo):
 | 1 | `kinds: ["bar-widget", "panel"]` with a `Service.qml` entry point | The shell only loads `entryPoints.service` when `kinds` contains `"service"`. The validator requires an entry point for every kind claimed (`barWidget`, `panel`, `service` keys). | `kinds: ["service", "bar-widget"]`, `entryPoints: { service, barWidget }`. |
 | 2 | Separate `panel` kind for the UI, plus "follow KeyboardPanel + PanelKeyCatcher" | First-party popups (audio, network, bluetooth, agents) are **one `bar-widget` entry point** that extends `qs.Ui` `Panel` and hosts a `KeyboardPanel` popup. The `panel` kind is a free-floating summoned window (like the OSD), not a bar popup. | The panel is the bar widget's `KeyboardPanel` popup. No `panel` kind in v1. (A detached `panel` window can be added later if the popup is too small.) |
 | 3 | "Service.qml starts the engine if it isn't running" | Widgets are instantiated once per monitor; the service is a singleton. Quickshell ships `Quickshell.Io.Socket` + `SplitParser` (the shell's own IPC uses them), so QML can speak newline-JSON natively. Third-party widgets reach their own service through `shell.serviceFor(manifest.id)`. | Socket client lives only in `Service.qml`. Engine start goes through **systemd socket activation** (`soundgineer.socket`, `%t/soundgineer.sock`, `SocketMode=0600`): connecting starts it, no PID juggling, permissions enforced by systemd. |
-| 4 | Engine sources and build live in the plugin repo, `install.sh` builds it | The plugin checkout *is* `~/.config/omarchy/plugins/<id>/`, and the shell runs `inotifywait -m -r` over that tree and hot-reloads the plugin on any write. An in-tree JUCE build would reload the shell thousands of times. | `install.sh` builds **out of tree** in `$XDG_CACHE_HOME/soundgineer/build`. Nothing writes inside the plugin dir at runtime. `.gitignore` the usual build dirs anyway. |
-| 5 | "Fresh Omarchy 4 install is the only prerequisite" + build from source | A fresh install has no guarantee of `cmake`/`base-devel`/`alsa-lib` headers, and installing them needs sudo, which we may not run. | `install.sh` checks for the toolchain and, if missing, prints the exact `sudo pacman -S --needed …` line and exits. The AUR package is the zero-toolchain path. Definition of done is adjusted accordingly. |
+| 4 | Engine sources and build live in the plugin repo, `install.sh` builds it | The plugin checkout *is* `~/.config/omarchy/plugins/<id>/`, and the shell runs `inotifywait -m -r` over that tree and hot-reloads the plugin on any write. An in-tree build would reload the shell thousands of times. | `install.sh` builds **out of tree** in `$XDG_CACHE_HOME/soundgineer/build`. Nothing writes inside the plugin dir at runtime. `.gitignore` the usual build dirs anyway. |
+| 5 | "Fresh Omarchy 4 install is the only prerequisite" + build from source | A fresh install has no guarantee of `cmake`/`base-devel`/JACK headers, and installing them needs sudo, which we may not run. | `install.sh` checks for the toolchain and, if missing, prints the exact `sudo pacman -S --needed …` line and exits. The AUR package is the zero-toolchain path. Definition of done is adjusted accordingly. |
 | 6 | Port `src/worklet` + `src/shared` | The **authoritative patch state, wavetable generation/selection, and preset (de)serialization live on the main thread** (`src/audio/engine.ts`, `src/ui/preset-io.ts`). The 59 factory presets are TS code using `P()` raw→normalized conversion inside a DOM-importing UI file. | Also port `engine.ts` patch logic and `preset-io.ts` sanitizing into `engine/core`. Factory presets are **extracted once to JSON** by a script in the reference checkout and committed as data. |
 | 7 | "Seed both sides identically where possible" | Randomness is exactly three `Math.random()` call sites in `voice.ts` (per-note random, unison start-phase randomization, white/pink noise). | The golden harness replaces `Math.random` with a seeded `mulberry32`; the port uses the same generator via one injected RNG, called in the same order. Noise/random paths then become deterministic and use the **same −60 dB threshold**; spectral matching is only the fallback. |
 | 8 | "−60 dBFS residual" | JS does all scalar math in `double` and only rounds to float when storing into `Float32Array`. A C++ port that uses `float` for scalar state will drift in feedback paths (SVF, comb, Freeverb, delay) far past −60 dB. | Porting rule: **JS `number` → `double`; `Float32Array` → `float`**, same order of operations, same 128-sample control block (`BLOCK = 128`) regardless of host buffer size. |
@@ -35,7 +35,7 @@ Research sources (read-only clones, never inside this repo):
 | 11 | Computer-keyboard piano (A W S E D F T G Y H U J K, Z/X) + hjkl navigation | `PanelKeyCatcher` consumes `h j k l`, `x`, Space, Enter, Tab. H/J/K and X collide with the piano map. It also has no key-release handling, which a piano needs. | Piano mode (toggle key `p`) sets `blocked: true` on the catcher and uses its own `Keys.onPressed/onReleased` handler, ignoring auto-repeat. `Esc` leaves piano mode first, closes the panel second. Closing the panel or losing focus sends `allNotesOff`. |
 | 12 | Message names identical to `messages.ts` | `messages.ts` has no preset, state-query, or wavetable-by-name messages because the browser UI owns the patch. Binary payloads (`Float32Array` mips) don't belong in JSON. | Keep every `ToWorklet`/`FromWorklet` name and shape. Add engine-owned messages (`hello`, `getState`, `state`, `paramById`, `loadPreset`, `savePreset`, `listPresets`, `presetList`, `setWavetable` by name/path, `power`, `error`). Wavetables travel by **name or file path**, never as sample arrays. Params accept `index` **or** `id`. Scope samples are decimated (e.g. 256 points) and rounded to 4 decimals. |
 | 13 | "Bar widget: power toggle" | Ambiguous: stop the service, or keep it but release audio? | Proposal: power **off** = engine closes its PipeWire stream and MIDI ports (0 CPU, socket stays up so the bar keeps state); power **on** reopens them. Stopping the systemd unit stays available via `sg-ctl` / `systemctl --user`. *Needs your OK.* |
-| 14 | JUCE for everything | JUCE GUI modules pull X11/freetype/webkit headers into a headless daemon. | `soundgineer-engine` links only `juce_core`, `juce_events`, `juce_audio_basics`, `juce_audio_devices` (JACK backend → `pipewire-jack`, ALSA seq MIDI). Plugin/Standalone targets use `juce_audio_processors` + `juce_audio_utils`. JUCE is pinned by tag via CMake `FetchContent` **at build time only**; the AUR package pins the same tarball + checksum. |
+| 14 | JUCE for everything | JUCE is AGPLv3-or-commercial, which conflicts with the MIT constraint for distributed binaries. Its GUI modules would also pull X11/freetype headers into a headless daemon. | **No JUCE** (owner decision, Phase 1). The daemon uses the JACK API directly (`pipewire-jack`, MIT): audio out plus a JACK MIDI in port, with PipeWire bridging hardware/ALSA MIDI. VST3/LV2/Standalone use **DPF** (ISC), pinned by commit in Phase 6. |
 
 Also noted, no change needed: `qs.Commons` palette must be imported as
 `import qs.Commons as Commons` and used as `Commons.Color.*` (Qt 6.12 shadows
@@ -86,15 +86,15 @@ Reference facts the port must preserve:
 │  Service.qml (singleton) ── Quickshell.Io.Socket, JSON lines ──┐  │
 └────────────────────────────────────────────────────────────────┼──┘
                      systemd --user soundgineer.socket (0600)    ▼
-                     soundgineer-engine (C++20, JUCE, headless)
-                     PipeWire via JACK API · ALSA seq MIDI in
-          engine/core (no JUCE, no I/O) also feeds VST3 + LV2 + Standalone
+                     soundgineer-engine (C++20, headless)
+                     PipeWire via JACK API (pipewire-jack) · JACK MIDI in
+   engine/core (no deps, no I/O) also feeds VST3 + LV2 + Standalone (DPF)
 ```
 
 ### 2a. Engine (`engine/`)
 
-- C++20, CMake ≥ 3.24, JUCE pinned by tag via `FetchContent`.
-- `engine/core/`: pure C++, no JUCE, no allocation after `prepare()`, no I/O.
+- C++20, CMake ≥ 3.24. Daemon: JACK API only. Plugins: DPF (Phase 6).
+- `engine/core/`: pure C++, no third-party code, no allocation after `prepare()`, no I/O.
   Mirrors reference files 1:1: `dsp.{h,cpp}`, `voice`, `effects`, `processor`,
   `params`, `fft`, `wavetable_gen`, `messages`, plus `patch` (from
   `engine.ts`) and `preset_io` (from `preset-io.ts`).
@@ -189,7 +189,7 @@ Keyboard-first panel that feels native to Omarchy.
 
 ## 4. Build order (stop and report after each phase)
 
-1. **Scaffold** — CMake + JUCE skeleton that builds an empty `engine/core`
+1. **Scaffold** — CMake skeleton that builds an empty `engine/core`
    test binary; `manifest.json` + stub QML that passes validate; docs
    skeleton; CI (engine build + ctest + validator + `qmllint` if available).
 2. **Reference harness + data extraction** — `tests/parity/harness/` (Node 24,
@@ -205,7 +205,7 @@ Keyboard-first panel that feels native to Omarchy.
    mode, each effect, unison, and 10 factory presets on a short MIDI phrase.
    Threshold −60 dBFS residual for every case (RNG is seeded); spectral match
    only for a case you explicitly justify. All pass or I sign off per exception.
-4. **Realtime engine** — JACK/PipeWire audio, ALSA seq MIDI, socket server,
+4. **Realtime engine** — JACK/PipeWire audio, JACK MIDI in, socket server,
    preset load/save, systemd units, `sg-ctl`.
 5. **Omarchy plugin UI** — service, widget, panel pages, theming, piano mode.
 6. **VST3 / LV2 / Standalone** from the same core; smoke-test in Carla.
@@ -218,12 +218,12 @@ Keyboard-first panel that feels native to Omarchy.
 
 - MIT, keep the reference copyright notice alongside ours.
 - No telemetry, analytics, crash reporting, update checks, or network calls at
-  runtime. (JUCE is fetched at build time only.)
+  runtime.
 - No secrets or personal info in commits, docs, or presets.
 - Never run plugin code at install time, never require sudo, never write
   outside `~/.config/omarchy/plugins/<id>/` (git only), `~/.local`,
   `~/.config/systemd/user`, and XDG data/state/cache/runtime dirs.
-- Dependencies: JUCE, `pipewire-jack`/JACK, `alsa-lib`, Qt/Quickshell
+- Dependencies: the JACK API (`pipewire-jack`), DPF for plugin targets, Qt/Quickshell
   (provided by Omarchy). Ask before adding anything else.
 - Real-time safety is a correctness requirement.
 

@@ -37,12 +37,7 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends ninja-build libasound2-dev libjack-jackd2-dev
-      - name: Cache JUCE checkout
-        uses: actions/cache@v4
-        with:
-          path: build/_deps/juce-src
-          key: juce-9.0.4
+          sudo apt-get install -y --no-install-recommends ninja-build libjack-jackd2-dev
       - name: Configure
         run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
       - name: Build
@@ -51,7 +46,7 @@ jobs:
         run: ctest --test-dir build --output-on-failure
       - name: Engine links no network or GUI libraries
         run: |
-          bin=build/engine/app/soundgineer-engine_artefacts/Release/soundgineer-engine
+          bin=build/engine/app/soundgineer-engine
           if ldd "$bin" | grep -Ei 'curl|libX11|freetype|webkit|gtk'; then
             echo "soundgineer-engine must stay headless and offline." >&2
             exit 1

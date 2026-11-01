@@ -1,4 +1,4 @@
-# JUCE-free command-line tools.
+# Command-line tools: sg_core only, no audio-system dependency.
 add_executable(sg-render sg_render.cpp)
 target_link_libraries(sg-render PRIVATE sg_core)
 

@@ -15,17 +15,13 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     "inside ~/.config/omarchy/plugins/ would make the shell hot-reload the plugin.")
 endif()
 
-option(SG_BUILD_ENGINE  "Build the soundgineer-engine daemon (needs JUCE)" ON)
-option(SG_BUILD_PLUGINS "Build VST3/LV2/Standalone targets (needs JUCE, Phase 6)" OFF)
+option(SG_BUILD_ENGINE  "Build the soundgineer-engine daemon (needs the JACK API, e.g. pipewire-jack)" ON)
+option(SG_BUILD_PLUGINS "Build VST3/LV2/Standalone targets with DPF (Phase 6)" OFF)
 option(SG_BUILD_TESTS   "Build unit and parity tests" ON)
 
-# Pure C++ DSP core and the JUCE-free tools.
+# Pure C++ DSP core and the dependency-free tools.
 add_subdirectory(engine/core)
 add_subdirectory(engine/tools)
-
-if(SG_BUILD_ENGINE OR SG_BUILD_PLUGINS)
-  include(cmake/JUCE.cmake)
-endif()
 
 if(SG_BUILD_ENGINE)
   add_subdirectory(engine/app)

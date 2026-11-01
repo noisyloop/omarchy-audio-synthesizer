@@ -7,9 +7,9 @@
 │  plugin/Service.qml singleton ── Socket, JSON lines ────────────┐  │
 └─────────────────────────────────────────────────────────────────┼──┘
                      systemd --user soundgineer.socket (0600)     ▼
-                     soundgineer-engine (C++20, JUCE, headless)
-                     PipeWire via JACK API · ALSA sequencer MIDI
-          engine/core (no JUCE, no I/O) also feeds VST3 + LV2 + Standalone
+                     soundgineer-engine (C++20, headless)
+                     PipeWire via JACK API (pipewire-jack) · JACK MIDI in
+   engine/core (no deps, no I/O) also feeds VST3 + LV2 + Standalone (DPF)
 ```
 
 ## Layout
@@ -18,12 +18,11 @@
 |------|------|
 | `manifest.json` | Omarchy plugin manifest (schema 1). Must stay at the repo root. |
 | `plugin/` | QML entry points loaded by omarchy-shell. |
-| `engine/core/` | DSP core: pure C++20, no JUCE, no allocation on the audio thread, no I/O. |
-| `engine/app/` | `soundgineer-engine` daemon (JUCE audio devices + MIDI, socket server). |
-| `engine/tools/` | `sg-render` (offline render) and `sg-ctl` (socket CLI). JUCE-free. |
+| `engine/core/` | DSP core: pure C++20, no third-party code, no allocation on the audio thread, no I/O. |
+| `engine/app/` | `soundgineer-engine` daemon (JACK API audio + MIDI, socket server). |
+| `engine/tools/` | `sg-render` (offline render) and `sg-ctl` (socket CLI). |
 | `tests/` | Unit tests; `tests/parity/` holds the reference harness and fixtures. |
 | `tools/` | Vendored `omarchy-plugin-validate` and helpers. |
-| `cmake/` | JUCE pin. |
 
 ## Rules that shape the layout
 

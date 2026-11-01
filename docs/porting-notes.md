@@ -41,21 +41,18 @@ None found yet.
 
 ## Licensing
 
-The project's own code is MIT, with the reference copyright notice kept in
-`LICENSE`. JUCE, which the build spec requires for the daemon and the
-VST3/LV2/Standalone targets, is dual-licensed **AGPLv3 or commercial**
-(JUCE 9 licence). Consequences:
+Decision (Phase 1, approved by the project owner): **no JUCE.** JUCE is
+AGPLv3-or-commercial, which conflicts with shipping MIT binaries.
 
-- Source in this repository stays MIT. `engine/core/` has no JUCE code at
-  all, so it and `sg-render` / `sg-ctl` are MIT in every form.
-- Any binary that links JUCE (`soundgineer-engine`, the plugins, the
-  Standalone app) is, when distributed, covered by AGPLv3 unless the
-  distributor holds a JUCE commercial licence.
-- `juce_analytics` is never linked, `JUCE_USE_CURL=0`, and CI checks the
-  daemon links no network or GUI libraries.
+| Piece | Uses | Licence |
+|-------|------|---------|
+| `engine/core`, `sg-render`, `sg-ctl` | nothing but the C++ standard library | MIT (ours) |
+| `soundgineer-engine` | JACK API, provided on Omarchy by `pipewire-jack` | pipewire-jack: MIT. (jack2's libjack is LGPL-2.1, dynamically linked, also fine.) |
+| VST3 / LV2 / Standalone (Phase 6) | DPF (DISTRHO Plugin Framework) | ISC |
 
-**Open decision for the project owner.** Options: (a) accept AGPLv3 for
-JUCE-linked binaries; (b) obtain a JUCE licence; (c) replace JUCE with
-MIT/ISC-compatible pieces (libpipewire or the JACK API directly for the
-daemon, DPF for VST3/LV2/Standalone). Because the core is JUCE-free, (c)
-only touches `engine/app/` and the Phase 6 plugin wrapper.
+MIDI: the engine opens a JACK MIDI input port. Under PipeWire, hardware and
+ALSA-sequencer MIDI devices appear as JACK MIDI ports, so no separate ALSA
+sequencer code is needed.
+
+Nothing in the build is fetched at configure time for the engine. DPF will
+be pinned by commit when Phase 6 adds it.
