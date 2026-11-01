@@ -1,0 +1,1081 @@
+{
+ "sampleRate": 44100,
+ "seed": 12345,
+ "cases": [
+  {
+   "name": "init_c3",
+   "notes": [
+    [
+     0,
+     0.12,
+     48,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "init_c4",
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "init_c5",
+   "notes": [
+    [
+     0,
+     0.12,
+     72,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "wavetable_0",
+   "raw": {
+    "osc1.wavetable": 0,
+    "osc1.morph": 0.6
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "wavetable_1",
+   "raw": {
+    "osc1.wavetable": 1,
+    "osc1.morph": 0.6
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "wavetable_2",
+   "raw": {
+    "osc1.wavetable": 2,
+    "osc1.morph": 0.6
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "wavetable_3",
+   "raw": {
+    "osc1.wavetable": 3,
+    "osc1.morph": 0.6
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "wavetable_4",
+   "raw": {
+    "osc1.wavetable": 4,
+    "osc1.morph": 0.6
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "wavetable_5",
+   "raw": {
+    "osc1.wavetable": 5,
+    "osc1.morph": 0.6
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "unison_7",
+   "raw": {
+    "osc1.unison": 7,
+    "osc1.detune": 25,
+    "osc1.spread": 0.8
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "hard_sync",
+   "raw": {
+    "osc1.sync": 2.7
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "three_oscs",
+   "raw": {
+    "osc2.enabled": 1,
+    "osc2.wavetable": 2,
+    "osc2.transpose": 7,
+    "osc3.enabled": 1,
+    "osc3.wavetable": 4,
+    "osc3.transpose": -12,
+    "osc3.pan": -0.5
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "sub_0",
+   "raw": {
+    "osc1.enabled": 0,
+    "sub.enabled": 1,
+    "sub.shape": 0
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "sub_1",
+   "raw": {
+    "osc1.enabled": 0,
+    "sub.enabled": 1,
+    "sub.shape": 1
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "sub_2",
+   "raw": {
+    "osc1.enabled": 0,
+    "sub.enabled": 1,
+    "sub.shape": 2
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "sub_3",
+   "raw": {
+    "osc1.enabled": 0,
+    "sub.enabled": 1,
+    "sub.shape": 3
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "noise_white",
+   "raw": {
+    "osc1.enabled": 0,
+    "noise.enabled": 1,
+    "noise.type": 0
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "noise_pink",
+   "raw": {
+    "osc1.enabled": 0,
+    "noise.enabled": 1,
+    "noise.type": 1
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "filter_0",
+   "raw": {
+    "osc1.morph": 0.66,
+    "filter1.type": 0,
+    "filter1.cutoff": 1200,
+    "filter1.resonance": 0.6,
+    "filter1.drive": 0.3
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "filter_1",
+   "raw": {
+    "osc1.morph": 0.66,
+    "filter1.type": 1,
+    "filter1.cutoff": 1200,
+    "filter1.resonance": 0.6,
+    "filter1.drive": 0.3
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "filter_2",
+   "raw": {
+    "osc1.morph": 0.66,
+    "filter1.type": 2,
+    "filter1.cutoff": 1200,
+    "filter1.resonance": 0.6,
+    "filter1.drive": 0.3
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "filter_3",
+   "raw": {
+    "osc1.morph": 0.66,
+    "filter1.type": 3,
+    "filter1.cutoff": 1200,
+    "filter1.resonance": 0.6,
+    "filter1.drive": 0.3
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "filter_4",
+   "raw": {
+    "osc1.morph": 0.66,
+    "filter1.type": 4,
+    "filter1.cutoff": 1200,
+    "filter1.resonance": 0.6,
+    "filter1.drive": 0.3
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "filter_5",
+   "raw": {
+    "osc1.morph": 0.66,
+    "filter1.type": 5,
+    "filter1.cutoff": 1200,
+    "filter1.resonance": 0.6,
+    "filter1.drive": 0.3
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "filter_6",
+   "raw": {
+    "osc1.morph": 0.66,
+    "filter1.type": 6,
+    "filter1.cutoff": 1200,
+    "filter1.resonance": 0.6,
+    "filter1.drive": 0.3
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "filter_7",
+   "raw": {
+    "osc1.morph": 0.66,
+    "filter1.type": 7,
+    "filter1.cutoff": 1200,
+    "filter1.resonance": 0.6,
+    "filter1.drive": 0.3
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "filter_8",
+   "raw": {
+    "osc1.morph": 0.66,
+    "filter1.type": 8,
+    "filter1.cutoff": 1200,
+    "filter1.resonance": 0.6,
+    "filter1.drive": 0.3
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "filter_parallel",
+   "raw": {
+    "osc1.morph": 0.66,
+    "filter2.enabled": 1,
+    "filter2.type": 3,
+    "filter2.cutoff": 3000,
+    "filter.routing": 1
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "shape_1",
+   "raw": {
+    "dist.type": 1,
+    "dist.drive": 0.6,
+    "dist.bits": 5,
+    "dist.downsample": 4
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "shape_2",
+   "raw": {
+    "dist.type": 2,
+    "dist.drive": 0.6,
+    "dist.bits": 5,
+    "dist.downsample": 4
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "shape_3",
+   "raw": {
+    "dist.type": 3,
+    "dist.drive": 0.6,
+    "dist.bits": 5,
+    "dist.downsample": 4
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "shape_4",
+   "raw": {
+    "dist.type": 4,
+    "dist.drive": 0.6,
+    "dist.bits": 5,
+    "dist.downsample": 4
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "fx_chorus",
+   "raw": {
+    "osc1.morph": 0.66,
+    "chorus.enabled": 1
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.3
+  },
+  {
+   "name": "fx_phaser",
+   "raw": {
+    "osc1.morph": 0.66,
+    "phaser.enabled": 1
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.3
+  },
+  {
+   "name": "fx_flanger",
+   "raw": {
+    "osc1.morph": 0.66,
+    "flanger.enabled": 1
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.3
+  },
+  {
+   "name": "fx_delay",
+   "raw": {
+    "osc1.morph": 0.66,
+    "delay.enabled": 1,
+    "delay.sync": 0,
+    "delay.time": 0.05
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.3
+  },
+  {
+   "name": "fx_reverb",
+   "raw": {
+    "osc1.morph": 0.66,
+    "reverb.enabled": 1
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.3
+  },
+  {
+   "name": "fx_eq",
+   "raw": {
+    "osc1.morph": 0.66,
+    "eq.enabled": 1,
+    "eq.low_gain": 6,
+    "eq.mid_gain": -4,
+    "eq.high_gain": 5
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.3
+  },
+  {
+   "name": "fx_comp",
+   "raw": {
+    "osc1.morph": 0.66,
+    "comp.enabled": 1,
+    "comp.threshold": -30
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.3
+  },
+  {
+   "name": "fx_fxdist",
+   "raw": {
+    "osc1.morph": 0.66,
+    "fxdist.enabled": 1
+   },
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.3
+  },
+  {
+   "name": "mod_lfo_morph",
+   "raw": {
+    "lfo1.sync": 0,
+    "lfo1.rate": 6
+   },
+   "mods": [
+    {
+     "source": "lfo1",
+     "dest": "osc1.morph",
+     "depth": 0.8,
+     "enabled": true
+    }
+   ],
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "mod_env2_cutoff",
+   "raw": {
+    "osc1.morph": 0.66,
+    "filter1.cutoff": 400
+   },
+   "mods": [
+    {
+     "source": "env2",
+     "dest": "filter1.cutoff",
+     "depth": 0.5,
+     "enabled": true
+    }
+   ],
+   "notes": [
+    [
+     0,
+     0.12,
+     60,
+     1.0
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "poly_steal",
+   "raw": {
+    "master.polyphony": 2,
+    "env1.release": 0.3
+   },
+   "notes": [
+    [
+     0,
+     0.05,
+     48,
+     1
+    ],
+    [
+     0.03,
+     0.1,
+     52,
+     1
+    ],
+    [
+     0.06,
+     0.15,
+     55,
+     1
+    ],
+    [
+     0.09,
+     0.18,
+     60,
+     0.5
+    ]
+   ],
+   "seconds": 0.2
+  },
+  {
+   "name": "preset_deep_saw_bass",
+   "preset": "Deep Saw Bass",
+   "notes": [
+    [
+     0,
+     0.3,
+     48,
+     0.9
+    ],
+    [
+     0.1,
+     0.35,
+     55,
+     0.7
+    ],
+    [
+     0.2,
+     0.5,
+     60,
+     1.0
+    ],
+    [
+     0.4,
+     0.7,
+     64,
+     0.8
+    ]
+   ],
+   "seconds": 0.8
+  },
+  {
+   "name": "preset_morphing_pad",
+   "preset": "Morphing Pad",
+   "notes": [
+    [
+     0,
+     0.3,
+     48,
+     0.9
+    ],
+    [
+     0.1,
+     0.35,
+     55,
+     0.7
+    ],
+    [
+     0.2,
+     0.5,
+     60,
+     1.0
+    ],
+    [
+     0.4,
+     0.7,
+     64,
+     0.8
+    ]
+   ],
+   "seconds": 0.8
+  },
+  {
+   "name": "preset_reese_bass",
+   "preset": "Reese Bass",
+   "notes": [
+    [
+     0,
+     0.3,
+     48,
+     0.9
+    ],
+    [
+     0.1,
+     0.35,
+     55,
+     0.7
+    ],
+    [
+     0.2,
+     0.5,
+     60,
+     1.0
+    ],
+    [
+     0.4,
+     0.7,
+     64,
+     0.8
+    ]
+   ],
+   "seconds": 0.8
+  },
+  {
+   "name": "preset_acid_squelch",
+   "preset": "Acid Squelch",
+   "notes": [
+    [
+     0,
+     0.3,
+     48,
+     0.9
+    ],
+    [
+     0.1,
+     0.35,
+     55,
+     0.7
+    ],
+    [
+     0.2,
+     0.5,
+     60,
+     1.0
+    ],
+    [
+     0.4,
+     0.7,
+     64,
+     0.8
+    ]
+   ],
+   "seconds": 0.8
+  },
+  {
+   "name": "preset_super_saw_lead",
+   "preset": "Super Saw Lead",
+   "notes": [
+    [
+     0,
+     0.3,
+     48,
+     0.9
+    ],
+    [
+     0.1,
+     0.35,
+     55,
+     0.7
+    ],
+    [
+     0.2,
+     0.5,
+     60,
+     1.0
+    ],
+    [
+     0.4,
+     0.7,
+     64,
+     0.8
+    ]
+   ],
+   "seconds": 0.8
+  },
+  {
+   "name": "preset_crystal_bell",
+   "preset": "Crystal Bell",
+   "notes": [
+    [
+     0,
+     0.3,
+     48,
+     0.9
+    ],
+    [
+     0.1,
+     0.35,
+     55,
+     0.7
+    ],
+    [
+     0.2,
+     0.5,
+     60,
+     1.0
+    ],
+    [
+     0.4,
+     0.7,
+     64,
+     0.8
+    ]
+   ],
+   "seconds": 0.8
+  },
+  {
+   "name": "preset_choir_pad",
+   "preset": "Choir Pad",
+   "notes": [
+    [
+     0,
+     0.3,
+     48,
+     0.9
+    ],
+    [
+     0.1,
+     0.35,
+     55,
+     0.7
+    ],
+    [
+     0.2,
+     0.5,
+     60,
+     1.0
+    ],
+    [
+     0.4,
+     0.7,
+     64,
+     0.8
+    ]
+   ],
+   "seconds": 0.8
+  },
+  {
+   "name": "preset_funk_clav",
+   "preset": "Funk Clav",
+   "notes": [
+    [
+     0,
+     0.3,
+     48,
+     0.9
+    ],
+    [
+     0.1,
+     0.35,
+     55,
+     0.7
+    ],
+    [
+     0.2,
+     0.5,
+     60,
+     1.0
+    ],
+    [
+     0.4,
+     0.7,
+     64,
+     0.8
+    ]
+   ],
+   "seconds": 0.8
+  },
+  {
+   "name": "preset_kalimba",
+   "preset": "Kalimba",
+   "notes": [
+    [
+     0,
+     0.3,
+     48,
+     0.9
+    ],
+    [
+     0.1,
+     0.35,
+     55,
+     0.7
+    ],
+    [
+     0.2,
+     0.5,
+     60,
+     1.0
+    ],
+    [
+     0.4,
+     0.7,
+     64,
+     0.8
+    ]
+   ],
+   "seconds": 0.8
+  },
+  {
+   "name": "preset_robot_talk",
+   "preset": "Robot Talk",
+   "notes": [
+    [
+     0,
+     0.3,
+     48,
+     0.9
+    ],
+    [
+     0.1,
+     0.35,
+     55,
+     0.7
+    ],
+    [
+     0.2,
+     0.5,
+     60,
+     1.0
+    ],
+    [
+     0.4,
+     0.7,
+     64,
+     0.8
+    ]
+   ],
+   "seconds": 0.8
+  }
+ ]
+}

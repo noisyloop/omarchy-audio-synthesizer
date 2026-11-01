@@ -1,0 +1,33 @@
+{
+  "name": "Solid Square",
+  "version": 1,
+  "category": "Bass",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.3333333333333333,
+    "osc1.morph": 0.15,
+    "osc1.transpose": 0.375,
+    "osc1.level": 0.55,
+    "sub.enabled": 1,
+    "sub.shape": 0,
+    "sub.octave": 0.6666666666666666,
+    "sub.level": 0.65,
+    "filter1.enabled": 1,
+    "filter1.type": 0,
+    "filter1.cutoff": 0.6989700043360189,
+    "env1.attack": 0.11928031367991558,
+    "env1.decay": 0.6505149978319905,
+    "env1.sustain": 0.9,
+    "env1.release": 0.45887048733451313,
+    "eq.enabled": 1,
+    "eq.low_gain": 0.5833333333333334
+  },
+  "mods": [
+    {
+      "source": "modwheel",
+      "dest": "osc1.morph",
+      "depth": 0.4,
+      "enabled": true
+    }
+  ]
+}

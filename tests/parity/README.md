@@ -21,23 +21,34 @@ written in raw units (Hz, seconds) and converted with the reference's
 curve functions. The same one-off script dumps them to JSON with the exact
 normalized values, so the engine and the plugin load plain JSON files.
 
-Layout (filled in from Phase 2):
+## Layout
 
 ```
-harness/       Node 24 scripts that drive the reference DSP offline
-  resolve.mjs    module.register hook: resolves extensionless .ts imports
-  globals.mjs    stubs sampleRate, currentTime, registerProcessor, AudioWorkletProcessor
-  seed.mjs       replaces Math.random with seeded mulberry32 (sg::Rng twin)
-  unit.mjs       per-class golden vectors (Envelope, Lfo, VoiceFilter, effects, ...)
-  render.mjs     whole-patch + MIDI phrase renders to WAV
-  extract.mjs    factory presets and built-in wavetables to JSON fixtures
-fixtures/      generated goldens, each tagged with the reference commit
-compare/       C++ test that runs sg-render / core classes and reports
-               RMS residual (dBFS) and spectral difference per case
+cases.json          test cases (patch overrides or a factory preset + notes)
+harness/hooks.mjs   Node load hooks: resolve extensionless .ts, expose FACTORY
+harness/generate.mjs  stubs the AudioWorklet globals, seeds Math.random with
+                    mulberry32 (twin of sg::Rng), mirrors engine.ts loadPreset
+                    + syncAll, renders every case; also writes the factory
+                    presets (presets/factory/) and the C++ parameter table
+fixtures/*.wav      golden renders (float32 stereo, 44.1 kHz)
+fixtures/REFERENCE  reference commit the fixtures came from
 ```
 
-The harness reads a local reference checkout passed by path
-(`SG_REFERENCE_DIR`) and never modifies it.
+Run the comparison (also part of `ctest`):
+
+```bash
+SG_FACTORY_PRESETS=presets/factory sg-render --parity tests/parity/cases.json tests/parity/fixtures
+```
+
+Regenerate fixtures (only when the reference or cases change):
+
+```bash
+cd tests/parity/harness
+SG_REFERENCE_DIR=/path/to/reference node --experimental-transform-types --import ./register.mjs generate.mjs
+```
+
+The harness reads a local reference checkout passed by path and never
+modifies it.
 
 Pass threshold: residual ≤ −60 dBFS for every case. Randomness is seeded on
 both sides, so noise paths use the same threshold; any spectral-only case

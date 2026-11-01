@@ -1,0 +1,49 @@
+{
+  "name": "Sync Pluck",
+  "version": 1,
+  "category": "Starter",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0,
+    "osc1.morph": 0.55,
+    "osc1.sync": 0,
+    "filter1.enabled": 1,
+    "filter1.type": 0.125,
+    "filter1.cutoff": 0.5510708379251146,
+    "filter1.resonance": 0.3,
+    "filter1.keytrack": 1,
+    "env1.attack": 0.07525749891599529,
+    "env1.decay": 0.6747425010840046,
+    "env1.sustain": 0,
+    "env1.release": 0.5938048044303623,
+    "env2.attack": 0,
+    "env2.decay": 0.5994850021680093,
+    "env2.sustain": 0,
+    "env2.release": 0.5161208724347942,
+    "delay.enabled": 1,
+    "delay.mix": 0.25,
+    "delay.feedback": 0.35714285714285715,
+    "reverb.enabled": 1,
+    "reverb.mix": 0.2
+  },
+  "mods": [
+    {
+      "source": "env2",
+      "dest": "filter1.cutoff",
+      "depth": 0.5,
+      "enabled": true
+    },
+    {
+      "source": "env2",
+      "dest": "osc1.sync",
+      "depth": 0.5,
+      "enabled": true
+    },
+    {
+      "source": "velocity",
+      "dest": "filter1.cutoff",
+      "depth": 0.25,
+      "enabled": true
+    }
+  ]
+}

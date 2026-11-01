@@ -1,0 +1,61 @@
+{
+  "name": "Velvet Strings",
+  "version": 1,
+  "category": "Pads",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0,
+    "osc1.morph": 0.68,
+    "osc1.unison": 0.3333333333333333,
+    "osc1.detune": 0.12,
+    "osc1.spread": 0.9,
+    "osc1.level": 0.55,
+    "osc2.enabled": 1,
+    "osc2.wavetable": 0.3333333333333333,
+    "osc2.morph": 0.35,
+    "osc2.transpose": 0.625,
+    "osc2.unison": 0.2,
+    "osc2.detune": 0.09,
+    "osc2.level": 0.2,
+    "filter1.enabled": 1,
+    "filter1.type": 0,
+    "filter1.cutoff": 0.7347066608853082,
+    "filter1.resonance": 0.05,
+    "filter1.keytrack": 0.4,
+    "env1.attack": 0.6360170110875688,
+    "env1.decay": 0.7499999999999999,
+    "env1.sustain": 0.9,
+    "env1.release": 0.7169309235519102,
+    "lfo1.sync": 0,
+    "lfo1.rate": 0.7443632931796621,
+    "chorus.enabled": 1,
+    "chorus.depth": 0.6,
+    "chorus.mix": 0.45,
+    "eq.enabled": 1,
+    "eq.mid_gain": 0.4166666666666667,
+    "eq.mid_freq": 0.40888831095874917,
+    "reverb.enabled": 1,
+    "reverb.size": 0.8,
+    "reverb.mix": 0.3
+  },
+  "mods": [
+    {
+      "source": "velocity",
+      "dest": "env1.attack",
+      "depth": -0.2,
+      "enabled": true
+    },
+    {
+      "source": "aftertouch",
+      "dest": "filter1.cutoff",
+      "depth": 0.2,
+      "enabled": true
+    },
+    {
+      "source": "lfo1",
+      "dest": "osc1.fine",
+      "depth": 0.02,
+      "enabled": true
+    }
+  ]
+}

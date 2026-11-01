@@ -31,9 +31,27 @@ fixtures together.
 6. Core code is compiled with `-fno-fast-math -ffp-contract=off` so the
    compiler does not reassociate or fuse operations the reference does not.
 
+## Parity result
+
+All 53 cases in `tests/parity/cases.json` match the reference **bit for bit**
+(residual reported as −400 dB, i.e. zero difference) at 44.1 kHz with seed
+12345. That covers the init patch at C3/C4/C5, all 6 wavetables, unison, hard
+sync, 3 oscillators, 4 sub shapes, white/pink noise, all 9 filter types,
+parallel routing, 4 shape modes, all 8 effects, LFO and envelope modulation,
+voice stealing, and 10 factory presets on a 4-note phrase. All 59 factory
+presets load and render (`ctest`, core test).
+
+Bit-exactness on this machine comes from following the porting rules strictly
+and from glibc's libm matching V8 for the functions used. Another libm could
+introduce last-bit differences; the −60 dBFS threshold leaves room for that.
+
 ## Deviations
 
-None yet.
+- Preset validation (`preset-io.ts` rules) is applied to every preset,
+  including factory ones, which the browser loaded unvalidated. Factory data is
+  already within range, so the result is identical.
+- `sg-render` reads MIDI files (SMF format 0/1, tempo map) and note lists;
+  the reference had no offline renderer.
 
 ## Reference bugs (matched, pending approval to fix)
 

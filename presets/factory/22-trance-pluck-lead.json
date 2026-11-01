@@ -1,0 +1,60 @@
+{
+  "name": "Trance Pluck Lead",
+  "version": 1,
+  "category": "Leads",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0,
+    "osc1.morph": 0.7,
+    "osc1.unison": 0.5333333333333333,
+    "osc1.detune": 0.22,
+    "osc1.spread": 1,
+    "osc1.level": 0.6,
+    "osc2.enabled": 1,
+    "osc2.wavetable": 0.3333333333333333,
+    "osc2.morph": 0.2,
+    "osc2.transpose": 0.625,
+    "osc2.level": 0.25,
+    "filter1.enabled": 1,
+    "filter1.type": 0.125,
+    "filter1.cutoff": 0.6250204211305667,
+    "filter1.resonance": 0.2,
+    "filter1.keytrack": 0.5,
+    "env1.attack": 0.07525749891599529,
+    "env1.decay": 0.6945378125959109,
+    "env1.sustain": 0.35,
+    "env1.release": 0.5788393772962043,
+    "env2.attack": 0,
+    "env2.decay": 0.6192803136799155,
+    "env2.sustain": 0.1,
+    "env2.release": 0.5161208724347942,
+    "delay.enabled": 1,
+    "delay.division": 0.5,
+    "delay.pingpong": 1,
+    "delay.mix": 0.28,
+    "delay.feedback": 0.40816326530612246,
+    "reverb.enabled": 1,
+    "reverb.size": 0.75,
+    "reverb.mix": 0.25
+  },
+  "mods": [
+    {
+      "source": "env2",
+      "dest": "filter1.cutoff",
+      "depth": 0.45,
+      "enabled": true
+    },
+    {
+      "source": "macro1",
+      "dest": "env1.sustain",
+      "depth": 0.5,
+      "enabled": true
+    },
+    {
+      "source": "macro2",
+      "dest": "reverb.mix",
+      "depth": 0.35,
+      "enabled": true
+    }
+  ]
+}

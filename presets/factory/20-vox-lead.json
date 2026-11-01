@@ -1,0 +1,50 @@
+{
+  "name": "Vox Lead",
+  "version": 1,
+  "category": "Leads",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.5,
+    "osc1.morph": 0.4,
+    "osc1.unison": 0.13333333333333333,
+    "osc1.detune": 0.08,
+    "osc1.level": 0.7,
+    "filter1.enabled": 1,
+    "filter1.type": 1,
+    "filter1.cutoff": 0.5927170834612145,
+    "filter1.resonance": 0.4,
+    "filter1.mix": 0.9,
+    "env1.attack": 0.32525749891599526,
+    "env1.decay": 0.6747425010840046,
+    "env1.sustain": 0.9,
+    "env1.release": 0.5615630595607739,
+    "lfo1.sync": 0,
+    "lfo1.rate": 0.4447621625361478,
+    "lfo2.sync": 0,
+    "lfo2.rate": 0.7540139115321889,
+    "chorus.enabled": 1,
+    "chorus.mix": 0.3,
+    "reverb.enabled": 1,
+    "reverb.mix": 0.25
+  },
+  "mods": [
+    {
+      "source": "modwheel",
+      "dest": "osc1.morph",
+      "depth": 0.5,
+      "enabled": true
+    },
+    {
+      "source": "lfo1",
+      "dest": "filter1.cutoff",
+      "depth": 0.15,
+      "enabled": true
+    },
+    {
+      "source": "lfo2",
+      "dest": "osc1.fine",
+      "depth": 0.03,
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "name": "Chip Lead",
+  "version": 1,
+  "category": "Leads",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.3333333333333333,
+    "osc1.morph": 0,
+    "osc1.phase_rand": 0,
+    "osc1.level": 0.65,
+    "filter1.enabled": 1,
+    "filter1.type": 0,
+    "filter1.cutoff": 0.9260504167945479,
+    "env1.attack": 0,
+    "env1.decay": 0.6192803136799155,
+    "env1.sustain": 1,
+    "env1.release": 0.3607530084436579,
+    "lfo1.sync": 0,
+    "lfo1.rate": 0.7809179645577824,
+    "dist.type": 1,
+    "dist.bits": 0.3333333333333333,
+    "dist.downsample": 0.43082708345352605,
+    "dist.mix": 0.8,
+    "delay.enabled": 1,
+    "delay.division": 0.5833333333333334,
+    "delay.mix": 0.25,
+    "delay.feedback": 0.25510204081632654
+  },
+  "mods": [
+    {
+      "source": "lfo1",
+      "dest": "osc1.fine",
+      "depth": 0.04,
+      "enabled": true
+    }
+  ]
+}

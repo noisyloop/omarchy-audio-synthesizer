@@ -43,6 +43,18 @@ Also noted, no change needed: `qs.Commons` palette must be imported as
 named after the plugin id; `omarchy plugin add` never runs plugin code, so the
 install step is always a separate `./install.sh`.
 
+### OODA pass 2 (before building phases 2–7)
+
+| Phase | Observed | Decision |
+|-------|----------|----------|
+| 2 Harness | The reference uses `const enum` and constructor parameter properties, so Node needs `--experimental-transform-types` (Node ≥ 22.7), not plain type stripping. `FACTORY` presets are not exported. The worklet FFT and mip tables store every intermediate in `Float32Array`. | A Node load hook appends `export { FACTORY }` to `presets.ts` in memory, so the reference is never edited. The harness also dumps the parameter table, which generates the C++ table, so IDs, ranges and curves can't drift. Goldens are float32 WAVs at 44.1 kHz, short (0.2 s unit cases, 0.8 s preset phrases) to keep the repo small. |
+| 3 Port | Exactly 3 RNG call sites: per-note random, 48 unison start phases, and noise per sample. JS `Math.round` rounds half up; `x \| 0` truncates; `%` is `fmod`. Every `float op float` in C++ stays single precision, while JS works in double. | One shared `Rng` per processor, called in reference order. A `jsRound` helper. The rule is that every float array element is loaded into a `double` before any arithmetic. Routes are kept in fixed arrays, so a `mod` message never allocates on the audio thread. |
+| 3 Tests | Fixtures depend on Node only when regenerated. | `ctest` compares `engine/core` against the committed goldens: residual ≤ −60 dBFS per case. |
+| 4 Engine | The JACK API gives audio and MIDI in one client; host buffers are multiples of 128 in practice, but not guaranteed. | Fixed 128-frame core blocks through a small output FIFO. All 7 wavetables are prebuilt at startup, so a wavetable change is a pointer swap. Socket activation reads `LISTEN_FDS` directly (no libsystemd). One `poll()` thread serves the socket; a 30 Hz telemetry thread computes the spectrum from the scope. |
+| 5 Plugin UI | The demo already holds the panel. Duplicating it for the plugin would fork the UI. | The panel body moves to `plugin/ui/` and takes a `theme` object and an `engine` object. The plugin passes `Commons` tokens and `Service.qml`; the demo passes its stand-in theme and the mock engine. There is one UI. |
+| 6 Plugins | DPF builds VST3, LV2 and a JACK standalone from one target, and supports programs. | All parameters are exposed normalized 0–1. The 59 factory presets are embedded as programs, so the mod matrix and LFO shapes load too. The host's generic UI is used; there is no custom plugin GUI in v1. |
+| 7 Packaging | No sudo; the shell hot-reloads the plugin dir. | `install.sh` builds in `~/.cache`, installs binaries, factory presets and the systemd units under `~/.local` and `~/.config/systemd/user`. |
+
 ---
 
 ## 1. Context

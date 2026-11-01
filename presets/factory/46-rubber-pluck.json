@@ -1,0 +1,46 @@
+{
+  "name": "Rubber Pluck",
+  "version": 1,
+  "category": "Plucks",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0,
+    "osc1.morph": 0.5,
+    "osc1.level": 0.7,
+    "filter1.enabled": 1,
+    "filter1.type": 0.125,
+    "filter1.cutoff": 0.5510708379251146,
+    "filter1.resonance": 0.35,
+    "env1.attack": 0,
+    "env1.decay": 0.6505149978319905,
+    "env1.sustain": 0,
+    "env1.release": 0.5615630595607739,
+    "env2.attack": 0,
+    "env2.decay": 0.5,
+    "env2.sustain": 0,
+    "env2.release": 0.3607530084436579,
+    "dist.type": 0.75,
+    "dist.drive": 0.45,
+    "dist.mix": 0.8
+  },
+  "mods": [
+    {
+      "source": "env2",
+      "dest": "filter1.cutoff",
+      "depth": 0.35,
+      "enabled": true
+    },
+    {
+      "source": "env2",
+      "dest": "dist.drive",
+      "depth": 0.25,
+      "enabled": true
+    },
+    {
+      "source": "velocity",
+      "dest": "filter1.cutoff",
+      "depth": 0.25,
+      "enabled": true
+    }
+  ]
+}

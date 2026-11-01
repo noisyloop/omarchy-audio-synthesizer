@@ -1,0 +1,40 @@
+{
+  "name": "Deep Saw Bass",
+  "version": 1,
+  "category": "Starter",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0,
+    "osc1.morph": 0.7,
+    "osc1.unison": 0.26666666666666666,
+    "osc1.detune": 0.09,
+    "osc1.transpose": 0.375,
+    "osc1.level": 0.8,
+    "sub.enabled": 1,
+    "sub.level": 0.7,
+    "sub.octave": 0.6666666666666666,
+    "filter1.enabled": 1,
+    "filter1.type": 0.125,
+    "filter1.cutoff": 0.3920304196852271,
+    "filter1.resonance": 0.35,
+    "filter1.drive": 0.3,
+    "env1.attack": 0.11928031367991558,
+    "env1.decay": 0.6505149978319905,
+    "env1.sustain": 0.9,
+    "env1.release": 0.45887048733451313,
+    "env2.attack": 0.11928031367991558,
+    "env2.decay": 0.6360170110875688,
+    "env2.sustain": 0.15,
+    "env2.release": 0.43843694043922604,
+    "dist.type": 0.25,
+    "dist.drive": 0.25
+  },
+  "mods": [
+    {
+      "source": "env2",
+      "dest": "filter1.cutoff",
+      "depth": 0.45,
+      "enabled": true
+    }
+  ]
+}

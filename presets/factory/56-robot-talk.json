@@ -1,0 +1,49 @@
+{
+  "name": "Robot Talk",
+  "version": 1,
+  "category": "FX",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.5,
+    "osc1.morph": 0.5,
+    "osc1.level": 0.3,
+    "filter1.enabled": 1,
+    "filter1.type": 1,
+    "filter1.cutoff": 0.5663233347786729,
+    "filter1.resonance": 0.3,
+    "env1.attack": 0.1747425010840047,
+    "env1.decay": 0.6192803136799155,
+    "env1.sustain": 1,
+    "env1.release": 0.4838791275652058,
+    "lfo1.sync": 1,
+    "lfo1.division": 0.8333333333333334,
+    "lfo1.smooth": 0.3,
+    "dist.type": 1,
+    "dist.bits": 0.4,
+    "dist.downsample": 0.26416041678685936,
+    "dist.mix": 0.6,
+    "delay.enabled": 1,
+    "delay.division": 0.6666666666666666,
+    "delay.mix": 0.15
+  },
+  "mods": [
+    {
+      "source": "random",
+      "dest": "filter1.cutoff",
+      "depth": 0.3,
+      "enabled": true
+    },
+    {
+      "source": "lfo1",
+      "dest": "osc1.morph",
+      "depth": 0.5,
+      "enabled": true
+    },
+    {
+      "source": "modwheel",
+      "dest": "filter1.cutoff",
+      "depth": 0.3,
+      "enabled": true
+    }
+  ]
+}

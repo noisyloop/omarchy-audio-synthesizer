@@ -1,0 +1,51 @@
+{
+  "name": "Hollow Organ",
+  "version": 1,
+  "category": "Keys",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.16666666666666666,
+    "osc1.morph": 0.15,
+    "osc1.level": 0.55,
+    "osc1.phase_rand": 0,
+    "osc2.enabled": 1,
+    "osc2.wavetable": 0,
+    "osc2.morph": 0,
+    "osc2.transpose": 0.625,
+    "osc2.level": 0.35,
+    "osc2.phase_rand": 0,
+    "osc3.enabled": 1,
+    "osc3.wavetable": 0,
+    "osc3.morph": 0,
+    "osc3.transpose": 0.75,
+    "osc3.level": 0.2,
+    "osc3.phase_rand": 0,
+    "filter1.enabled": 0,
+    "env1.attack": 0.1747425010840047,
+    "env1.decay": 0.5,
+    "env1.sustain": 1,
+    "env1.release": 0.381186555338945,
+    "phaser.enabled": 1,
+    "phaser.rate": 0.8525585656629274,
+    "phaser.depth": 0.5,
+    "phaser.feedback": 0.2105263157894737,
+    "phaser.mix": 0.35,
+    "reverb.enabled": 1,
+    "reverb.size": 0.6,
+    "reverb.mix": 0.2
+  },
+  "mods": [
+    {
+      "source": "modwheel",
+      "dest": "phaser.rate",
+      "depth": -0.3,
+      "enabled": true
+    },
+    {
+      "source": "macro1",
+      "dest": "osc3.level",
+      "depth": 0.5,
+      "enabled": true
+    }
+  ]
+}

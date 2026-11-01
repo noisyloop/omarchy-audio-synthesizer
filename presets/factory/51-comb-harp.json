@@ -1,0 +1,50 @@
+{
+  "name": "Comb Harp",
+  "version": 1,
+  "category": "Plucks",
+  "params": {
+    "osc1.enabled": 0,
+    "noise.enabled": 1,
+    "noise.type": 0,
+    "noise.level": 0.7,
+    "filter1.enabled": 1,
+    "filter1.type": 0.875,
+    "filter1.cutoff": 0.3713144507689456,
+    "filter1.resonance": 0.92,
+    "filter1.keytrack": 1,
+    "filter2.enabled": 1,
+    "filter2.type": 0,
+    "filter2.cutoff": 0.7993133362240125,
+    "env1.attack": 0,
+    "env1.decay": 0.7697953115119062,
+    "env1.sustain": 0,
+    "env1.release": 0.696497376656623,
+    "env2.attack": 0,
+    "env2.decay": 0.32525749891599526,
+    "env2.sustain": 0,
+    "env2.release": 0.2580604362173971,
+    "reverb.enabled": 1,
+    "reverb.size": 0.7,
+    "reverb.mix": 0.3
+  },
+  "mods": [
+    {
+      "source": "env2",
+      "dest": "noise.level",
+      "depth": 0.3,
+      "enabled": true
+    },
+    {
+      "source": "macro1",
+      "dest": "filter1.resonance",
+      "depth": -0.2,
+      "enabled": true
+    },
+    {
+      "source": "velocity",
+      "dest": "filter2.cutoff",
+      "depth": 0.3,
+      "enabled": true
+    }
+  ]
+}

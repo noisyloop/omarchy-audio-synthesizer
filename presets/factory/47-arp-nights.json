@@ -1,0 +1,55 @@
+{
+  "name": "Arp Nights",
+  "version": 1,
+  "category": "Plucks",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.3333333333333333,
+    "osc1.morph": 0.4,
+    "osc1.unison": 0.06666666666666667,
+    "osc1.detune": 0.12,
+    "osc1.level": 0.6,
+    "filter1.enabled": 1,
+    "filter1.type": 0.125,
+    "filter1.cutoff": 0.6804642283860751,
+    "filter1.resonance": 0.3,
+    "filter1.keytrack": 0.4,
+    "env1.attack": 0,
+    "env1.decay": 0.6117895078355547,
+    "env1.sustain": 0,
+    "env1.release": 0.5161208724347942,
+    "env2.attack": 0,
+    "env2.decay": 0.5197953115119062,
+    "env2.sustain": 0,
+    "env2.release": 0.4134283002085334,
+    "lfo1.sync": 1,
+    "lfo1.division": 0.5833333333333334,
+    "delay.enabled": 1,
+    "delay.division": 0.8333333333333334,
+    "delay.pingpong": 1,
+    "delay.mix": 0.35,
+    "delay.feedback": 0.45918367346938777,
+    "reverb.enabled": 1,
+    "reverb.mix": 0.25
+  },
+  "mods": [
+    {
+      "source": "env2",
+      "dest": "filter1.cutoff",
+      "depth": 0.4,
+      "enabled": true
+    },
+    {
+      "source": "lfo1",
+      "dest": "osc1.morph",
+      "depth": 0.2,
+      "enabled": true
+    },
+    {
+      "source": "modwheel",
+      "dest": "filter1.cutoff",
+      "depth": 0.3,
+      "enabled": true
+    }
+  ]
+}
