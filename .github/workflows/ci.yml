@@ -1,8 +1,10 @@
 name: CI
 
+# Automatic runs are paused for now to save CI minutes. Run it by hand from
+# the Actions tab ("Run workflow") when needed; restore push/pull_request
+# triggers to re-enable.
 on:
-  push:
-  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read

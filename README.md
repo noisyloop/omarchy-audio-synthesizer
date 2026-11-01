@@ -7,6 +7,11 @@ for it.
 > **Status: in development (Phase 1 of 7, scaffold).** Nothing makes sound
 > yet. See [`docs/build-prompt.md`](docs/build-prompt.md) for the plan.
 
+## Try the panel UI now
+
+`qml demo/Main.qml` runs a preview of the keyboard-first panel against a mock
+engine (no sound). See [`demo/README.md`](demo/README.md).
+
 ## Install
 
 _Arrives in Phase 7._ The intended flow:
