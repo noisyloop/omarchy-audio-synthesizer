@@ -22,6 +22,7 @@
 | `engine/app/` | `soundgineer-engine` daemon (JACK API audio + MIDI, socket server). |
 | `engine/tools/` | `sg-render` (offline render) and `sg-ctl` (socket CLI). |
 | `tests/` | Unit tests; `tests/parity/` holds the reference harness and fixtures. |
+| `demo/` | Runnable panel preview with a mock engine (`qml demo/Main.qml`). |
 | `tools/` | Vendored `omarchy-plugin-validate` and helpers. |
 
 ## Rules that shape the layout
