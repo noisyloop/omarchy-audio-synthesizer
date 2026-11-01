@@ -206,7 +206,8 @@ DecodedWav decodeWav(const std::uint8_t* b, std::size_t size) {
         }
         off += 8 + static_cast<std::size_t>(sz) + (sz & 1);
     }
-    if (!haveFmt || !haveData || channels == 0 || bits == 0) throw std::runtime_error("malformed WAV (missing fmt/data chunk)");
+    if (!haveFmt || !haveData || channels == 0 || channels > 64) throw std::runtime_error("malformed WAV (missing fmt/data chunk)");
+    if (bits != 8 && bits != 16 && bits != 24 && bits != 32) throw std::runtime_error("unsupported WAV bit depth");
     const std::size_t bytesPer = bits / 8;
     const std::size_t frames = dataLen / (bytesPer * channels);
     DecodedWav out;

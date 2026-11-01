@@ -40,7 +40,7 @@ Window {
 
   // ------------------------------------------------------------ screenshots
   //   qml demo/Main.qml -- --screenshot out.png [--page 1-6] [--preset NAME]
-  //       [--notes 60,64,67] [--cursor SECTION,ROW] [--piano] [--search TEXT]
+  //       [--notes 60,64,67] [--cursor SECTION,ROW] [--piano] [--search TEXT] [--import]
   function arg(name) {
     var a = Qt.application.arguments
     var i = a.indexOf(name)
@@ -56,6 +56,7 @@ Window {
     if (Qt.application.arguments.indexOf("--piano") >= 0) panel.piano = true
     if (arg("--notes") !== "") arg("--notes").split(",").forEach(function(n) { engine.noteOn(Number(n)) })
     if (arg("--search") !== "") { panel.openSearch(); panel.picker.query = arg("--search") }
+    if (Qt.application.arguments.indexOf("--import") >= 0) { engine.refreshFiles(); panel.openImport() }
     shotTimer.path = shot
     shotTimer.start()
   }

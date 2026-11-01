@@ -15,6 +15,13 @@ QtObject {
     return out
   }
   function setPower(on) { powered = on; if (!on) held = [] }
+  property var files: ({ wavetable: [], sample: [] })
+  function refreshFiles() {
+    files = { wavetable: [{ name: "Serum Saws", path: "~/Music/wavetables/Serum Saws.wav" }, { name: "Vowel Morph", path: "~/Music/wavetables/Vowel Morph.wav" }],
+              sample: [{ name: "Vinyl Crackle", path: "~/Music/samples/Vinyl Crackle.wav" }] }
+  }
+  function importWavetable(osc, path) { setNorm("osc" + (osc + 1) + ".wavetable", 1) }
+  function importSample(path) {}
   property string patchName: "Init"
   property var values: Model.defaults()
   property var matrix: [

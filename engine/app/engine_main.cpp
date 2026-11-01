@@ -100,6 +100,8 @@ int main(int argc, char** argv) {
     paths.factoryPresets = factoryDir(argv[0]);
     paths.userPresets = envPath("XDG_DATA_HOME", ".local/share") / "soundgineer/presets";
     paths.state = envPath("XDG_STATE_HOME", ".local/state") / "soundgineer";
+    paths.userData = envPath("XDG_DATA_HOME", ".local/share") / "soundgineer";
+    paths.music = envPath("XDG_MUSIC_DIR", "Music");
 
     // systemd socket activation (soundgineer.socket): fd 3.
     int inherited = -1;

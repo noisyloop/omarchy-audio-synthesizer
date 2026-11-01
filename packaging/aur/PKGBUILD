@@ -1,4 +1,4 @@
-# Maintainer: OWNER
+# Maintainer: noisyloop
 # Soundgineer engine, CLI tools, factory presets, systemd user units, and the
 # VST3 / LV2 / standalone app. The Omarchy bar widget itself is installed with
 # `omarchy plugin add <repo-url>`; this package replaces ./install.sh.
@@ -7,7 +7,7 @@ pkgver=0.1.0
 pkgrel=1
 pkgdesc="Wavetable synthesizer for Omarchy: headless PipeWire engine, CLI, VST3/LV2"
 arch=('x86_64' 'aarch64')
-url="https://github.com/OWNER/omarchy-audio-synthesizer"
+url="https://github.com/noisyloop/omarchy-audio-synthesizer"
 license=('MIT')
 depends=('pipewire-jack' 'gcc-libs' 'glibc')
 makedepends=('cmake' 'ninja' 'git' 'pkgconf')
