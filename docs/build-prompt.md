@@ -13,7 +13,7 @@ Research sources (read-only clones, never inside this repo):
   `shell/services/PluginShellApi.qml`, `shell/Ui/{Panel,KeyboardPanel,PanelKeyCatcher}.qml`,
   `shell/plugins/services/media/` and `shell/plugins/panels/audio/`,
   `bin/omarchy-plugin-validate`.
-- `noisyloop/soundgineer@926f3e1`: `src/worklet/*`, `src/shared/*`,
+- The Soundgineer reference source: `src/worklet/*`, `src/shared/*`,
   `src/audio/engine.ts`, `src/ui/presets.ts`, `src/ui/preset-io.ts`, `docs/`.
 
 ---
@@ -52,9 +52,9 @@ Soundgineer, a wavetable synthesizer that runs in the browser. Work in this
 repository. The original TypeScript project is the reference implementation
 for sound and behavior. It is not a codebase to wrap, embed, or run in a webview.
 
-Reference repo (read-only; clone next to this repo, never into it):
-`https://github.com/noisyloop/soundgineer` — pin the commit you port from in
-`docs/porting-notes.md`.
+Reference source: a local, read-only checkout supplied separately (kept next
+to this repo, never inside it, and never linked from this repo). Record the
+reference version you port from in `docs/porting-notes.md` without a URL.
 
 Read before writing code: all of `src/worklet/`, `src/shared/`, `docs/`,
 `README.md`, **and** `src/audio/engine.ts`, `src/ui/preset-io.ts`,
