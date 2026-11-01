@@ -1,0 +1,9 @@
+# Build trees. install.sh builds out of tree (see docs/build-prompt.md §0 #4);
+# these only cover local dev builds.
+/build*/
+/out/
+/.cache/
+/compile_commands.json
+*.wav
+!tests/parity/fixtures/**/*.wav
+node_modules/

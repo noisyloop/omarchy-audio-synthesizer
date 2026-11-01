@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  plugin:
+    name: Omarchy plugin validate
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate manifest and plugin tree
+        run: tools/omarchy-plugin-validate .
+      - name: QML parses
+        # Syntax only: qs.* imports exist only inside omarchy-shell, so a full
+        # qmllint type check is not possible outside it.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends qt6-declarative-dev-tools
+          for f in plugin/*.qml; do /usr/lib/qt6/bin/qmlformat "$f" > /dev/null; done
+      - name: No hardcoded colors in plugin QML
+        run: |
+          if grep -nE '#[0-9a-fA-F]{3,8}\b|Qt\.rgba?\(' plugin/*.qml; then
+            echo "Use Commons.Color tokens instead of literal colors." >&2
+            exit 1
+          fi
+
+  engine:
+    name: Engine build + tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ninja-build libjack-jackd2-dev
+      - name: Configure
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+      - name: Engine links no network or GUI libraries
+        run: |
+          bin=build/engine/app/soundgineer-engine
+          if ldd "$bin" | grep -Ei 'curl|libX11|freetype|webkit|gtk'; then
+            echo "soundgineer-engine must stay headless and offline." >&2
+            exit 1
+          fi
