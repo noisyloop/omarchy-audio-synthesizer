@@ -27,6 +27,10 @@ if(SG_BUILD_ENGINE)
   add_subdirectory(engine/app)
 endif()
 
+if(SG_BUILD_PLUGINS)
+  add_subdirectory(engine/plugins)
+endif()
+
 if(SG_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)

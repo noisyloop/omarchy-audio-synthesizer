@@ -4,6 +4,8 @@ import QtQuick
 Rectangle {
   id: row
 
+  required property var theme
+
   property string label: ""
   property string valueText: ""
   property real bar: -1           // 0..1, or -1 for no bar
@@ -14,12 +16,12 @@ Rectangle {
   property string mark: "★"
   property int labelWidth: 54
 
-  width: Theme.sectionWidth
-  height: Theme.rowHeight
+  width: theme.sectionWidth
+  height: theme.rowHeight
   radius: 3
-  color: current ? Theme.cursorFill : "transparent"
+  color: current ? theme.cursorFill : "transparent"
   border.width: current ? 1 : 0
-  border.color: Theme.accent
+  border.color: theme.accent
 
   Text {
     id: name
@@ -28,9 +30,9 @@ Rectangle {
     width: row.bar >= 0 ? row.labelWidth : Math.min(implicitWidth, parent.width - 30)
     elide: Text.ElideRight
     text: row.label
-    color: row.dimmed ? Theme.dim : Theme.popupText
-    font.family: Theme.fontFamily
-    font.pixelSize: Theme.body
+    color: row.dimmed ? theme.dim : theme.popupText
+    font.family: theme.fontFamily
+    font.pixelSize: theme.body
   }
 
   Rectangle {
@@ -41,11 +43,11 @@ Rectangle {
     height: 4
     radius: 2
     anchors.verticalCenter: parent.verticalCenter
-    color: Theme.faint
+    color: theme.faint
     Rectangle {
       height: parent.height
       radius: 2
-      color: row.dimmed ? Theme.dim : Theme.accent
+      color: row.dimmed ? theme.dim : theme.accent
       x: row.bipolar ? Math.min(parent.width / 2, parent.width * row.bar) : 0
       width: row.bipolar ? Math.abs(parent.width * row.bar - parent.width / 2) : parent.width * row.bar
     }
@@ -59,8 +61,8 @@ Rectangle {
     horizontalAlignment: Text.AlignRight
     elide: Text.ElideLeft
     text: row.valueText !== "" ? row.valueText : (row.marked ? row.mark : "")
-    color: row.marked && row.valueText === ""  ? Theme.accent : (row.dimmed ? Theme.dim : Theme.popupText)
-    font.family: Theme.fontFamily
-    font.pixelSize: Theme.caption + 1
+    color: row.marked && row.valueText === ""  ? theme.accent : (row.dimmed ? theme.dim : theme.popupText)
+    font.family: theme.fontFamily
+    font.pixelSize: theme.caption + 1
   }
 }

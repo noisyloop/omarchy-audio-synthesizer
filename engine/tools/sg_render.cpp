@@ -7,6 +7,7 @@
 #include "sg/version.h"
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -199,12 +200,43 @@ int runParity(const fs::path& casesPath, const fs::path& fixtures, const fs::pat
     return failures ? 1 : 0;
 }
 
+int runBench(double seconds) {
+    // Definition-of-done load: 16 voices, all three oscillators on, 4-voice
+    // unison each, filter 1 on (default), default FX off.
+    sg::Json pj = sg::Json::object();
+    pj.set("version", 1);
+    pj.set("name", "bench");
+    sg::Json params = sg::Json::object();
+    for (int o = 1; o <= 3; o++) {
+        const std::string g = "osc" + std::to_string(o);
+        params.set(g + ".enabled", 1.0);
+        params.set(g + ".unison", sg::valueToNorm(sg::kParams[sg::paramIndex(g + ".unison")], 4));
+        params.set(g + ".morph", 0.5);
+    }
+    pj.set("params", std::move(params));
+    const sg::Patch patch = sg::Patch::fromJson(pj);
+    std::vector<sg::NoteEvent> notes;
+    for (int i = 0; i < 16; i++) notes.push_back({0, seconds + 1, 40 + i * 3, 0.8});
+    sg::WavetableBank bank;
+    bank.prebuild();
+    const double sr = 48000;
+    const auto t0 = std::chrono::steady_clock::now();
+    const auto audio = sg::renderOffline(patch, notes, seconds, sr, 1, bank);
+    const double wall = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+    double peak = 0;
+    for (float v : audio.left) peak = std::max(peak, static_cast<double>(std::fabs(v)));
+    std::printf("rendered %.1f s of audio (16 voices x 3 osc x 4 unison, 48 kHz) in %.3f s\n", seconds, wall);
+    std::printf("CPU load: %.1f%% of one core (peak %.3f)\n", 100.0 * wall / seconds, peak);
+    return 0;
+}
+
 void usage() {
     std::printf(
         "Usage:\n"
         "  sg-render --preset <name|file.json> (--midi <file.mid> | --notes on:off:note:vel,...)\n"
         "            --out <file.wav> [--seconds S] [--rate 48000] [--seed N]\n"
         "  sg-render --parity <cases.json> <fixtures-dir> [--case NAME] [--threshold -60]\n"
+        "  sg-render --bench [seconds]   CPU benchmark (16 voices, 3 osc, 4 unison)\n"
         "Factory presets are looked up in $SG_FACTORY_PRESETS, <repo>/presets/factory,\n"
         "or ~/.local/share/soundgineer/factory.\n");
 }
@@ -218,6 +250,7 @@ int main(int argc, char** argv) try {
         std::string a = argv[i];
         if (a == "--version") { std::printf("sg-render %s\n", sg::versionString()); return 0; }
         if (a == "--help" || a == "-h") { usage(); return 0; }
+        if (a == "--bench") return runBench(i + 1 < argc ? std::atof(argv[i + 1]) : 10);
         if (a.rfind("--", 0) == 0 && i + 1 < argc && a != "--parity") opt[a] = argv[++i];
         else if (a == "--parity") opt[a] = "1";
         else pos.push_back(a);
