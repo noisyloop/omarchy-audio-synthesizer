@@ -1,5 +1,6 @@
 #include "sg/json.h"
 
+#include <charconv>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -178,9 +179,8 @@ static void dumpValue(std::string& out, const Json& v) {
     case Json::Type::Number: {
         const double d = v.asNumber();
         char b[32];
-        if (d == std::floor(d) && std::fabs(d) < 1e15) std::snprintf(b, sizeof b, "%.0f", d);
-        else std::snprintf(b, sizeof b, "%.17g", d);
-        out += b;
+        const auto r = std::to_chars(b, b + sizeof b, d);  // shortest round-trip, like JSON.stringify
+        out.append(b, r.ptr);
         break;
     }
     case Json::Type::String: dumpString(out, v.asString()); break;
