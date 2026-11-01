@@ -36,8 +36,8 @@ You need Omarchy 4 and the build tools
 (`sudo pacman -S --needed base-devel cmake ninja pipewire-jack`). Then:
 
 ```bash
-omarchy plugin add <repo-url> --enable
-cd ~/.config/omarchy/plugins/<plugin-id>
+omarchy plugin add https://github.com/noisyloop/omarchy-audio-synthesizer --enable
+cd ~/.config/omarchy/plugins/noisyloop.soundgineer
 ./install.sh             # engine, sg-ctl, sg-render, presets, systemd units
 ./install.sh --plugins   # optional: also VST3 (~/.vst3), LV2 (~/.lv2), standalone
 ```
@@ -50,7 +50,7 @@ your presets. An AUR `PKGBUILD` is in `packaging/aur/`.
 ## Usage
 
 Open the panel from the bar, or bind
-`omarchy-shell <plugin-id> toggle` to a key. Play it with a MIDI keyboard
+`omarchy-shell noisyloop.soundgineer toggle` to a key. Play it with a MIDI keyboard
 (connected automatically) or with the computer keyboard in piano mode.
 
 ### Keyboard shortcuts
@@ -64,6 +64,7 @@ Open the panel from the bar, or bind
 | `Tab` / `Shift+Tab` / `1`–`6` | pages: Osc · Filter · Shape · Mod · FX · Presets |
 | `/` | search parameters and presets (type to filter, arrows, Enter) |
 | `p` | piano mode: `A W S E D F T G Y H U J K` play C–C, `Z` / `X` octave, `P` or `Esc` leave |
+| `w` | on an OSC section: pick a wavetable (built-in or WAV from `~/Music` / `~/.local/share/soundgineer/wavetables`); on NOISE: pick a sample |
 | `o` | power on/off |
 | `Esc` | close the panel |
 | Mod page | `Enter` pick source → target, `e` slot on/off, `x` delete |
@@ -145,11 +146,10 @@ tools/omarchy-plugin-validate .
 - **Not yet tried on real hardware:** live PipeWire audio, MIDI devices, and
   the plugin inside a running omarchy-shell. The container these were built
   in has no sound server or Wayland session.
-- The LV2 build does not yet export the 59 programs as LV2 presets. The VST3
-  and standalone app have them as programs.
-- No custom GUI in VST3/LV2; hosts show their generic parameter view.
-- Wavetable/sample import works over the protocol (`setWavetable`,
-  `setSample`) but has no file picker in the panel yet.
+- No custom GUI in VST3/LV2; hosts show their generic parameter view. The 59
+  factory presets are VST3 programs and LV2 presets, and the mod matrix, LFO
+  shapes and FX order are saved with host sessions.
+- Security: first-pass review in [`docs/security-review.md`](docs/security-review.md).
 
 ## Privacy
 

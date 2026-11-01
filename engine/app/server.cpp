@@ -316,6 +316,49 @@ Json Server::presetListMessage() {
     return m;
 }
 
+bool Server::readableWav(const std::string& path, std::string& data, std::string& error) {
+    std::error_code ec;
+    const fs::path p(path);
+    std::string ext = p.extension().string();
+    for (auto& ch : ext) ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+    if (ext != ".wav") { error = "only .wav files can be imported"; return false; }
+    if (!fs::is_regular_file(p, ec)) { error = "not a regular file"; return false; }
+    if (fs::file_size(p, ec) > 64u * 1024 * 1024) { error = "file too large (max 64 MB)"; return false; }
+    data = readFile(p, 64u * 1024 * 1024);
+    if (data.empty()) { error = "cannot read file"; return false; }
+    return true;
+}
+
+Json Server::fileListMessage(const std::string& kind) {
+    // WAV files from the soundgineer data dir (wavetables/ or samples/) and ~/Music.
+    Json files = Json::array();
+    std::size_t count = 0;
+    auto scan = [&](const fs::path& dir, int maxDepth) {
+        std::error_code ec;
+        if (!fs::is_directory(dir, ec)) return;
+        for (auto it = fs::recursive_directory_iterator(dir, fs::directory_options::skip_permission_denied, ec);
+             it != fs::recursive_directory_iterator() && count < 500; it.increment(ec)) {
+            if (ec) break;
+            if (it.depth() >= maxDepth) it.disable_recursion_pending();
+            std::string ext = it->path().extension().string();
+            for (auto& ch : ext) ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+            if (ext != ".wav" || !it->is_regular_file(ec)) continue;
+            Json f = Json::object();
+            f.set("name", it->path().stem().string());
+            f.set("path", it->path().string());
+            files.push(std::move(f));
+            count++;
+        }
+    };
+    scan(paths_.userData / (kind == "sample" ? "samples" : "wavetables"), 3);
+    scan(paths_.music, 3);
+    Json m = Json::object();
+    m.set("type", "fileList");
+    m.set("kind", kind);
+    m.set("files", std::move(files));
+    return m;
+}
+
 bool Server::loadPresetByName(const std::string& nameOrPath, std::string& error) {
     auto tryFile = [&](const fs::path& f) -> bool {
         const std::string text = readFile(f, kMaxPresetBytes);
@@ -452,26 +495,30 @@ void Server::handle(Client& c, const std::string& line) {
             return;
         }
         try {
-            const std::string data = readFile(msg["path"].asString(), 64 * 1024 * 1024);
-            if (data.empty()) throw std::runtime_error("cannot read file");
+            std::string data, err;
+            if (!readableWav(msg["path"].asString(), data, err)) throw std::runtime_error(err);
             const auto wav = decodeWav(reinterpret_cast<const std::uint8_t*>(data.data()), data.size());
             std::shared_ptr<const WavetableData> table(makeTable(wavToWavetable(fs::path(msg["path"].asString()).stem().string(), wav)));
             engine_.bank().setCustom(osc, table);
             char id[32];
             std::snprintf(id, sizeof id, "osc%d.wavetable", osc + 1);
             engine_.setParam(paramIndex(id), 1.0);  // Custom slot, re-sends the table
+            broadcast(stateMessage());
         } catch (const std::exception& e) { reply(c, "error", e.what()); }
     } else if (type == "setSample") {
         if (msg["path"].isNull()) { engine_.setSample(nullptr); return; }
         try {
-            const std::string data = readFile(msg["path"].asString(), 64 * 1024 * 1024);
-            if (data.empty()) throw std::runtime_error("cannot read file");
+            std::string data, err;
+            if (!readableWav(msg["path"].asString(), data, err)) throw std::runtime_error(err);
             const auto wav = decodeWav(reinterpret_cast<const std::uint8_t*>(data.data()), data.size());
+            if (wav.channelData.empty() || wav.sampleRate <= 0) throw std::runtime_error("empty WAV");
             auto s = std::make_unique<Sample>();
             s->data = wav.channelData;
             s->sampleRate = wav.sampleRate;
             engine_.setSample(std::move(s));
         } catch (const std::exception& e) { reply(c, "error", e.what()); }
+    } else if (type == "listFiles") {
+        send(c, fileListMessage(msg["kind"].asString() == "sample" ? "sample" : "wavetable"));
     } else if (type == "listPresets") {
         send(c, presetListMessage());
     } else if (type == "loadPreset") {

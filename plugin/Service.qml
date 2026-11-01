@@ -28,6 +28,7 @@ Item {
   property int reconnectDelayMs: 250
   property string engineVersion: ""
   property string audioError: ""
+  property string lastError: ""
 
   // ---- engine API (see PanelBody.qml)
   property bool powered: false
@@ -44,6 +45,7 @@ Item {
   property var scope: []
   property var spectrum: []
   property int revision: 0
+  property var files: ({ wavetable: [], sample: [] })
 
   function norm(id) { return values[id] !== undefined ? values[id] : 0 }
   function setNorm(id, n) {
@@ -65,6 +67,12 @@ Item {
   function toggleFavorite(name) { send({ type: "setFavorite", name: name, on: !favorites[name] }) }
   function setPower(on) { send({ type: "power", on: !!on }) }
   function togglePower() { setPower(!powered) }
+  function refreshFiles() {
+    send({ type: "listFiles", kind: "wavetable" })
+    send({ type: "listFiles", kind: "sample" })
+  }
+  function importWavetable(osc, path) { send({ type: "setWavetable", osc: osc, path: path }) }
+  function importSample(path) { send({ type: "setSample", path: path }) }
   function setScopeWanted(on) { send({ type: "subscribe", status: true, scope: !!on }) }
 
   // The UI keeps a compact slot list; the engine has 32 indexed slots.
@@ -142,6 +150,15 @@ Item {
     case "scope":
       scope = msg.left || []
       spectrum = msg.spectrum || []
+      break
+    case "fileList": {
+      var next = { wavetable: files.wavetable, sample: files.sample }
+      next[msg.kind === "sample" ? "sample" : "wavetable"] = (msg.files || []).map(function(f) { return { name: String(f.name), path: String(f.path) } })
+      files = next
+      break
+    }
+    case "error":
+      lastError = String(msg.message || "")
       break
     case "param":
       values[msg.id] = Number(msg.value) || 0

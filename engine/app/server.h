@@ -15,6 +15,8 @@ struct Paths {
     std::filesystem::path factoryPresets;
     std::filesystem::path userPresets;
     std::filesystem::path state;  // favorites.json, session.json
+    std::filesystem::path userData;  // $XDG_DATA_HOME/soundgineer (wavetables/, samples/)
+    std::filesystem::path music;     // ~/Music
 };
 
 class Server {
@@ -46,6 +48,8 @@ private:
     void setPower(bool on, Json* error);
     bool loadPresetByName(const std::string& name, std::string& error);
     void reply(Client& c, const char* type, const std::string& message);
+    Json fileListMessage(const std::string& kind);
+    static bool readableWav(const std::string& path, std::string& data, std::string& error);
 
     Engine& engine_;
     Paths paths_;

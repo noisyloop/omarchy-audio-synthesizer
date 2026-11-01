@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <cmath>
 #include <memory>
 #include <random>
 
@@ -24,8 +25,9 @@ constexpr uint32_t kNumPrograms = sizeof(kFactoryPresets) / sizeof(kFactoryPrese
 
 class SoundgineerPlugin : public Plugin {
 public:
-    SoundgineerPlugin() : Plugin(sg::kNumParams, kNumPrograms, 0) {
+    SoundgineerPlugin() : Plugin(sg::kNumParams, kNumPrograms, 1) {
         bank_.prebuild();
+        for (int i = 0; i < 6; i++) tables_[i] = bank_.named(i);  // no bank lock on the audio thread
         for (int m = 0; m < 4; m++) {
             char id[32];
             std::snprintf(id, sizeof id, "macro%d.value", m + 1);
@@ -75,6 +77,38 @@ protected:
         } catch (...) {}
     }
 
+    void initState(uint32_t, State& state) override {
+        state.key = "patch";
+        state.label = "Mod matrix, LFO shapes, FX order";
+        state.defaultValue = "";
+        state.hints = 0;
+    }
+
+    // JSON with the non-parameter parts of the patch (same shape as a preset).
+    String getState(const char* key) const override {
+        if (std::strcmp(key, "patch") != 0) return String();
+        sg::Json full = patch_.toJson();
+        sg::Json out = sg::Json::object();
+        out.set("version", 1);
+        out.set("name", patch_.name);
+        out.set("mods", full["mods"]);
+        out.set("lfoShapes", full["lfoShapes"]);
+        out.set("fxOrder", full["fxOrder"]);
+        return String(out.dump().c_str());
+    }
+
+    void setState(const char* key, const char* value) override {
+        if (std::strcmp(key, "patch") != 0 || value == nullptr || *value == '\0') return;
+        try {
+            const sg::Patch parsed = sg::Patch::fromJson(sg::Json::parse(value));
+            patch_.name = parsed.name;
+            for (int s = 0; s < sg::kMaxModSlots; s++) { patch_.slots[s] = parsed.slots[s]; proc_->setModSlot(s, parsed.slots[s]); }
+            for (int l = 0; l < 8; l++) { patch_.shapes[l] = parsed.shapes[l]; proc_->setLfoShape(l, parsed.shapes[l]); }
+            std::copy(parsed.fxOrder, parsed.fxOrder + 8, patch_.fxOrder);
+            proc_->setFxOrder(parsed.fxOrder, 8);
+        } catch (...) {}
+    }
+
     float getParameterValue(uint32_t index) const override { return patch_.values[index]; }
 
     void setParameterValue(uint32_t index, float value) override {
@@ -82,7 +116,8 @@ protected:
         patch_.values[index] = std::clamp(value, 0.0f, 1.0f);
         proc_->setParam(static_cast<int>(index), patch_.values[index]);
         for (int o = 0; o < 3; o++)
-            if (static_cast<int>(index) == wtIdx_[o]) proc_->setWavetable(o, bank_.tableFor(patch_.values[index], o));
+            if (static_cast<int>(index) == wtIdx_[o])
+                proc_->setWavetable(o, tables_[std::min(5, static_cast<int>(std::floor(patch_.values[index] * 6 + 0.5)))]);
     }
 
     void sampleRateChanged(double sr) override { rebuild(sr); }
@@ -139,6 +174,7 @@ private:
     int pos_ = sg::kBlockSize;
     int macroIdx_[4];
     int wtIdx_[3];
+    const sg::WavetableData* tables_[6] = {};
 
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SoundgineerPlugin)
 };

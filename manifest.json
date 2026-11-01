@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "OWNER.soundgineer",
+  "id": "noisyloop.soundgineer",
   "name": "Soundgineer",
   "version": "0.1.0",
-  "author": "OWNER",
+  "author": "noisyloop",
   "license": "MIT",
   "description": "Wavetable synthesizer in your bar, played from the keyboard or a MIDI controller.",
   "kinds": ["service", "bar-widget"],

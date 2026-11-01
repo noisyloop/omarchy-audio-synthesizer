@@ -12,7 +12,9 @@ import "Model.js" as Model
 // favorites {name: true}, matrix [{source, dest, depth, enabled}], held [notes],
 // voices, peakL, peakR, scope [], spectrum [], revision, norm(id), setNorm(id, n),
 // noteOn(n), noteOff(n), allNotesOff(), loadPreset(name), toggleFavorite(name),
-// addSlot(src, dest), updateSlot(i, changes), removeSlot(i), setPower(on).
+// addSlot(src, dest), updateSlot(i, changes), removeSlot(i), setPower(on),
+// files {wavetable: [{name, path}], sample: [...]}, refreshFiles(),
+// importWavetable(osc, path), importSample(path).
 FocusScope {
   id: win
 
@@ -141,6 +143,40 @@ FocusScope {
       Model.moddableIds().map(function(id) { return { label: destLabel(id), data: id } }))
   }
 
+  // ---- wavetable / sample import (w on an OSC or NOISE section)
+  function fileItems(kind) {
+    var list = []
+    if (kind === "wavetable")
+      Model.WAVETABLES.slice(0, 6).forEach(function(n, i) { list.push({ label: "Built-in › " + n, data: { builtin: i } }) })
+    var files = (engine.files && engine.files[kind]) || []
+    files.forEach(function(f) { list.push({ label: "File › " + f.name, data: { path: f.path } }) })
+    if (list.length === 0) list.push({ label: "No WAV files in ~/Music or ~/.local/share/soundgineer/samples", data: { none: true } })
+    return list
+  }
+  function openImport() {
+    var title = sections[sec] ? sections[sec].title : ""
+    var m = /^OSC (\d)$/.exec(title)
+    if (Model.PAGES[page].key === "osc" && m) {
+      pickerFlow = { step: "wavetable", osc: Number(m[1]) - 1 }
+      if (engine.refreshFiles) engine.refreshFiles()
+      picker.openWith("Osc " + m[1] + ": pick a wavetable (Serum-style WAV or single cycle)", fileItems("wavetable"))
+    } else if (Model.PAGES[page].key === "osc" && title === "NOISE") {
+      pickerFlow = { step: "sample" }
+      if (engine.refreshFiles) engine.refreshFiles()
+      picker.openWith("Noise: pick a sample", fileItems("sample"))
+    } else {
+      flash("w imports a wavetable on an OSC section, or a sample on NOISE")
+    }
+  }
+  Connections {
+    target: win.engine
+    ignoreUnknownSignals: true
+    function onFilesChanged() {
+      if (picker.visible && win.pickerFlow && (win.pickerFlow.step === "wavetable" || win.pickerFlow.step === "sample"))
+        picker.items = win.fileItems(win.pickerFlow.step)
+    }
+  }
+
   function openSearch() {
     pickerFlow = { step: "search" }
     var list = Model.order.map(function(id) {
@@ -156,6 +192,20 @@ FocusScope {
     if (flow.step === "source") { pickDest(data); return }
     picker.close()
     keys.forceActiveFocus()
+    if (flow.step === "wavetable" || flow.step === "sample") {
+      if (data.none) return
+      if (flow.step === "sample") {
+        engine.importSample(data.path)
+        engine.setNorm("noise.type", 1)   // Sample
+        flash("Sample: " + data.path.split("/").pop())
+      } else if (data.builtin !== undefined) {
+        engine.setNorm("osc" + (flow.osc + 1) + ".wavetable", data.builtin / 6)
+      } else {
+        engine.importWavetable(flow.osc, data.path)
+        flash("Osc " + (flow.osc + 1) + ": " + data.path.split("/").pop())
+      }
+      return
+    }
     if (flow.step === "dest") {
       if (flow.slot < 0) {
         var i = engine.addSlot(flow.source, data)
@@ -236,6 +286,7 @@ FocusScope {
       if (t >= "1" && t <= "6") { win.goPage(Number(t) - 1); event.accepted = true; return }
       if (t === "/") { win.openSearch(); event.accepted = true; return }
       if (t === "p") { win.setPiano(true); event.accepted = true; return }
+      if (t === "w") { win.openImport(); event.accepted = true; return }
       if (t === "o") { engine.setPower(!engine.powered); event.accepted = true; return }
       var it = win.currentItem
       if (t === "r" && it && it.kind === "param") {
@@ -552,6 +603,7 @@ FocusScope {
           text: win.piano
             ? "PIANO  A W S E D F T G Y H U J K play · Z/X octave (C" + win.octave + ") · P or Esc leaves piano mode"
             : "hjkl/arrows move · +/- adjust (_ fine) · Enter toggle/pick · r reset · Tab or 1-6 pages · / search · p piano · o power"
+              + (Model.PAGES[win.page].key === "osc" ? " · w import wavetable / sample" : "")
               + (Model.PAGES[win.page].key === "mod" ? " · Enter assign · e on/off · x delete" : "")
               + (Model.PAGES[win.page].key === "presets" ? " · Enter load · f favorite" : "")
         }

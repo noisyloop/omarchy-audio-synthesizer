@@ -51,6 +51,8 @@ messages are replaced by `setWavetable` / `setSample` with file paths.
 | → engine | `power` | `{ "on": false }`: releases the PipeWire stream and MIDI port; the socket stays up. Replies with `state` to everyone. |
 | → engine | `setWavetable` | `{ "osc": 0, "name": "Vocal" }` or `{ "osc": 0, "path": "/path/table.wav" }` (Serum-style WAV → Custom slot) |
 | → engine | `setSample` | `{ "path": "/path/sample.wav" }` or `{ "path": null }` |
+| → engine | `listFiles` | `{ "kind": "wavetable" }` or `"sample"`: WAVs in `$XDG_DATA_HOME/soundgineer/{wavetables,samples}` and `~/Music` (≤ 500) |
+| engine → | `fileList` | `{ "kind", "files": [{ "name", "path" }] }` |
 | → engine | `listPresets` | `{}` |
 | engine → | `presetList` | `{ "presets": [{ "name", "category", "factory", "favorite", "path" }] }` |
 | → engine | `loadPreset` | `{ "name": "Kalimba" }`; replies with `state` to everyone |
