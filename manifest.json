@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "OWNER.soundgineer",
+  "name": "Soundgineer",
+  "version": "0.1.0",
+  "author": "OWNER",
+  "license": "MIT",
+  "description": "Wavetable synthesizer in your bar, played from the keyboard or a MIDI controller.",
+  "kinds": ["service", "bar-widget"],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "plugin/Service.qml",
+    "barWidget": "plugin/Widget.qml"
+  },
+  "barWidget": {
+    "displayName": "Soundgineer",
+    "description": "Synth power, current patch, voice activity and level; click to open the synth panel.",
+    "category": "Audio",
+    "aliases": ["synth", "synthesizer", "soundgineer"],
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}
