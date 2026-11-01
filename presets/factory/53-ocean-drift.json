@@ -1,0 +1,48 @@
+{
+  "name": "Ocean Drift",
+  "version": 1,
+  "category": "FX",
+  "params": {
+    "osc1.enabled": 0,
+    "noise.enabled": 1,
+    "noise.type": 0.5,
+    "noise.level": 0.6,
+    "filter1.enabled": 1,
+    "filter1.type": 0.5,
+    "filter1.cutoff": 0.5340199971093208,
+    "filter1.resonance": 0.5,
+    "env1.attack": 0.7940228147639202,
+    "env1.decay": 0.7499999999999999,
+    "env1.sustain": 1,
+    "env1.release": 0.7991899488828839,
+    "lfo1.sync": 0,
+    "lfo1.rate": 0.21602950874140342,
+    "lfo1.mode": 0.5,
+    "lfo2.sync": 0,
+    "lfo2.rate": 0.2891103112289636,
+    "lfo2.mode": 0.5,
+    "reverb.enabled": 1,
+    "reverb.size": 0.9,
+    "reverb.mix": 0.45
+  },
+  "mods": [
+    {
+      "source": "lfo1",
+      "dest": "filter1.cutoff",
+      "depth": 0.3,
+      "enabled": true
+    },
+    {
+      "source": "lfo2",
+      "dest": "noise.level",
+      "depth": 0.2,
+      "enabled": true
+    },
+    {
+      "source": "lfo2",
+      "dest": "filter1.resonance",
+      "depth": 0.15,
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "name": "PWM Keys",
+  "version": 1,
+  "category": "Starter",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.3333333333333333,
+    "osc1.morph": 0.3,
+    "osc1.unison": 0.13333333333333333,
+    "osc1.detune": 0.06,
+    "filter1.enabled": 1,
+    "filter1.type": 0,
+    "filter1.cutoff": 0.7993133362240125,
+    "env1.attack": 0.25,
+    "env1.decay": 0.7257724967479858,
+    "env1.sustain": 0.6,
+    "env1.release": 0.6188134446610549,
+    "lfo1.rate": 0.4936484274733295,
+    "lfo1.sync": 0,
+    "chorus.enabled": 1,
+    "chorus.mix": 0.35,
+    "eq.enabled": 1,
+    "eq.high_gain": 0.5555555555555556
+  },
+  "mods": [
+    {
+      "source": "lfo1",
+      "dest": "osc1.morph",
+      "depth": 0.35,
+      "enabled": true
+    },
+    {
+      "source": "modwheel",
+      "dest": "osc1.morph",
+      "depth": 0.5,
+      "enabled": true
+    }
+  ]
+}

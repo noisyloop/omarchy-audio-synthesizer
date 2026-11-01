@@ -17,12 +17,18 @@
 | Path | What |
 |------|------|
 | `manifest.json` | Omarchy plugin manifest (schema 1). Must stay at the repo root. |
-| `plugin/` | QML entry points loaded by omarchy-shell. |
-| `engine/core/` | DSP core: pure C++20, no third-party code, no allocation on the audio thread, no I/O. |
-| `engine/app/` | `soundgineer-engine` daemon (JACK API audio + MIDI, socket server). |
-| `engine/tools/` | `sg-render` (offline render) and `sg-ctl` (socket CLI). |
+| `plugin/` | QML entry points loaded by omarchy-shell (`Service.qml`, `Widget.qml`). |
+| `plugin/ui/` | The panel (`PanelBody.qml` + components), shared with `demo/`. Imports no shell modules; gets `theme` and `engine` objects. |
+| `engine/core/` | DSP core: pure C++20, no third-party code, no allocation on the audio thread, no I/O. Ported 1:1 from the reference; `params_table.inc` is generated from it. |
+| `engine/app/` | `soundgineer-engine` daemon (JACK API audio + MIDI, socket server, presets). |
+| `engine/tools/` | `sg-render` (offline render, parity, bench) and `sg-ctl` (socket CLI). |
+| `engine/plugins/` | DPF wrapper: VST3, LV2, JACK standalone. |
+| `presets/factory/` | 59 factory presets as JSON (extracted from the reference). |
+| `packaging/` | systemd user units, AUR `PKGBUILD`. |
+| `install.sh`, `uninstall.sh` | per-user build and install, no sudo. |
 | `tests/` | Unit tests; `tests/parity/` holds the reference harness and fixtures. |
 | `demo/` | Runnable panel preview with a mock engine (`qml demo/Main.qml`). |
+| `cmake/` | DPF pin (plugin targets only). |
 | `tools/` | Vendored `omarchy-plugin-validate` and helpers. |
 
 ## Rules that shape the layout

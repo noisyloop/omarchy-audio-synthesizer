@@ -1,0 +1,43 @@
+{
+  "name": "Wobble Bass",
+  "version": 1,
+  "category": "Bass",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.8333333333333334,
+    "osc1.morph": 0.4,
+    "osc1.transpose": 0.375,
+    "osc1.level": 0.8,
+    "sub.enabled": 1,
+    "sub.shape": 0,
+    "sub.octave": 0.6666666666666666,
+    "sub.level": 0.6,
+    "filter1.enabled": 1,
+    "filter1.type": 0.125,
+    "filter1.cutoff": 0.4336766652213271,
+    "filter1.resonance": 0.4,
+    "filter1.drive": 0.3,
+    "env1.attack": 0.07525749891599529,
+    "env1.decay": 0.6505149978319905,
+    "env1.sustain": 1,
+    "env1.release": 0.43843694043922604,
+    "lfo1.sync": 1,
+    "lfo1.division": 0.3333333333333333,
+    "dist.type": 0.25,
+    "dist.drive": 0.3
+  },
+  "mods": [
+    {
+      "source": "lfo1",
+      "dest": "filter1.cutoff",
+      "depth": 0.5,
+      "enabled": true
+    },
+    {
+      "source": "lfo1",
+      "dest": "osc1.morph",
+      "depth": 0.3,
+      "enabled": true
+    }
+  ]
+}

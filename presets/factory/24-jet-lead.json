@@ -1,0 +1,45 @@
+{
+  "name": "Jet Lead",
+  "version": 1,
+  "category": "Leads",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0,
+    "osc1.morph": 0.7,
+    "osc1.unison": 0.13333333333333333,
+    "osc1.detune": 0.1,
+    "osc1.level": 0.65,
+    "filter1.enabled": 1,
+    "filter1.type": 0.125,
+    "filter1.cutoff": 0.7670099985546603,
+    "filter1.resonance": 0.2,
+    "env1.attack": 0.1747425010840047,
+    "env1.decay": 0.6747425010840046,
+    "env1.sustain": 0.9,
+    "env1.release": 0.5615630595607739,
+    "flanger.enabled": 1,
+    "flanger.rate": 0.3242204477952234,
+    "flanger.depth": 0.8,
+    "flanger.feedback": 0.7894736842105263,
+    "flanger.mix": 0.55,
+    "delay.enabled": 1,
+    "delay.division": 0.5833333333333334,
+    "delay.mix": 0.2,
+    "reverb.enabled": 1,
+    "reverb.mix": 0.2
+  },
+  "mods": [
+    {
+      "source": "modwheel",
+      "dest": "flanger.feedback",
+      "depth": 0.2,
+      "enabled": true
+    },
+    {
+      "source": "velocity",
+      "dest": "filter1.cutoff",
+      "depth": 0.2,
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "name": "Lo-Fi EP",
+  "version": 1,
+  "category": "Keys",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.6666666666666666,
+    "osc1.morph": 0.25,
+    "osc1.level": 0.7,
+    "filter1.enabled": 1,
+    "filter1.type": 0,
+    "filter1.cutoff": 0.7993133362240125,
+    "filter1.keytrack": 0.4,
+    "env1.attack": 0.07525749891599529,
+    "env1.decay": 0.7940228147639202,
+    "env1.sustain": 0.35,
+    "env1.release": 0.5938048044303623,
+    "lfo1.sync": 0,
+    "lfo1.rate": 0.7365819892403265,
+    "lfo1.mode": 0.5,
+    "dist.type": 1,
+    "dist.bits": 0.6,
+    "dist.downsample": 0.16666666666666669,
+    "dist.mix": 0.5,
+    "chorus.enabled": 1,
+    "chorus.mix": 0.35,
+    "reverb.enabled": 1,
+    "reverb.mix": 0.18
+  },
+  "mods": [
+    {
+      "source": "velocity",
+      "dest": "filter1.cutoff",
+      "depth": 0.25,
+      "enabled": true
+    },
+    {
+      "source": "velocity",
+      "dest": "osc1.morph",
+      "depth": 0.15,
+      "enabled": true
+    },
+    {
+      "source": "lfo1",
+      "dest": "osc1.pan",
+      "depth": 0.25,
+      "enabled": true
+    }
+  ]
+}

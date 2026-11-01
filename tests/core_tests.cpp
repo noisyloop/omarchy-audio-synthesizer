@@ -1,10 +1,16 @@
 #include "sg/messages.h"
+#include "sg/patch.h"
+#include "sg/render.h"
 #include "sg/rng.h"
 #include "sg/version.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <filesystem>
+#include <fstream>
+#include <sstream>
 
 namespace {
 
@@ -58,6 +64,39 @@ void modSourcesMatchReference() {
     CHECK(sg::kBlockSize == 128);
 }
 
+void allFactoryPresetsLoadAndRender() {
+    namespace fs = std::filesystem;
+    int count = 0;
+    sg::WavetableBank bank;
+    for (const auto& e : fs::directory_iterator(SG_PRESET_DIR)) {
+        if (e.path().extension() != ".json") continue;
+        std::ifstream in(e.path());
+        std::stringstream ss;
+        ss << in.rdbuf();
+        const sg::Patch p = sg::Patch::fromJson(sg::Json::parse(ss.str()));
+        const auto audio = sg::renderOffline(p, {{0, 0.3, 60, 1}, {0.05, 0.3, 64, 0.8}}, 0.6, 48000, 1, bank);
+        double peak = 0;
+        bool finite = true;
+        for (float v : audio.left) { peak = std::max(peak, static_cast<double>(std::fabs(v))); finite = finite && std::isfinite(v); }
+        CHECK(finite);
+        if (peak <= 1e-4) std::fprintf(stderr, "silent preset: %s\n", p.name.c_str());
+        CHECK(peak > 1e-4);
+        CHECK(!p.category.empty());
+        count++;
+    }
+    CHECK(count == 59);
+}
+
+void jsonRoundTrip() {
+    const sg::Patch a = sg::Patch::fromJson(sg::Json::parse(R"({"name":"T","version":1,"params":{"osc1.morph":0.25},"mods":[{"source":"lfo1","dest":"osc1.morph","depth":0.5,"enabled":true}]})"));
+    const sg::Patch b = sg::Patch::fromJson(sg::Json::parse(a.toJson().dump()));
+    CHECK(b.values[sg::paramIndex("osc1.morph")] == 0.25f);
+    CHECK(b.slots[0] && b.slots[0]->depth == 0.5);
+    bool threw = false;
+    try { sg::Json::parse("{\"a\":"); } catch (...) { threw = true; }
+    CHECK(threw);
+}
+
 void versionIsSet() {
     CHECK(std::strlen(sg::versionString()) > 0);
 }
@@ -68,6 +107,8 @@ int main() {
     rngMatchesJavaScript();
     modSourcesMatchReference();
     versionIsSet();
+    allFactoryPresetsLoadAndRender();
+    jsonRoundTrip();
     if (failures) {
         std::fprintf(stderr, "%d check(s) failed\n", failures);
         return 1;

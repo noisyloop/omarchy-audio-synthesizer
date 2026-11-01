@@ -1,0 +1,32 @@
+{
+  "name": "Laser Zap",
+  "version": 1,
+  "category": "FX",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0,
+    "osc1.morph": 0,
+    "osc1.transpose": 0.75,
+    "osc1.level": 0.7,
+    "env1.attack": 0,
+    "env1.decay": 0.5994850021680093,
+    "env1.sustain": 0,
+    "env1.release": 0.43843694043922604,
+    "env2.attack": 0,
+    "env2.decay": 0.5638181262758265,
+    "env2.sustain": 0,
+    "env2.release": 0.3607530084436579,
+    "delay.enabled": 1,
+    "delay.division": 0.5833333333333334,
+    "delay.mix": 0.2,
+    "delay.feedback": 0.30612244897959184
+  },
+  "mods": [
+    {
+      "source": "env2",
+      "dest": "osc1.transpose",
+      "depth": 0.35,
+      "enabled": true
+    }
+  ]
+}

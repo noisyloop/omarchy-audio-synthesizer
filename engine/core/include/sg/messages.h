@@ -73,6 +73,25 @@ struct LfoPoint {
     double power;  // -1..1, 0 = linear
 };
 
+/** A drawn LFO shape: up to kMaxLfoPoints points, sorted by x. */
+struct LfoShape {
+    LfoPoint points[64];
+    int count = 0;
+};
+
+/** Reference defaultLfoShape(): rising/falling triangle. */
+inline LfoShape defaultLfoShape() noexcept {
+    LfoShape s;
+    s.points[0] = {0, 0, 0};
+    s.points[1] = {0.5, 1, 0};
+    s.points[2] = {1, 0, 0};
+    s.count = 3;
+    return s;
+}
+
+/** Evaluate a multi-point LFO shape at phase 0..1 (reference evalLfoShape). */
+double evalLfoShape(const LfoShape& shape, double phase) noexcept;
+
 struct ModSlotState {
     int source;    // kModSources index
     int dest;      // parameter index

@@ -1,52 +1,155 @@
 # Soundgineer for Omarchy
 
 A wavetable synthesizer that lives in the Omarchy bar. A native C++ engine
-does the sound; an Omarchy shell plugin gives you a keyboard-first panel
-for it.
+plays through PipeWire and takes MIDI; a keyboard-first panel drops down from
+the bar to edit it. The same DSP core also builds as VST3, LV2 and a
+standalone app.
 
-> **Status: in development (Phase 1 of 7, scaffold).** Nothing makes sound
-> yet. See [`docs/build-prompt.md`](docs/build-prompt.md) for the plan.
+![Osc page with three notes held](docs/images/osc.png)
 
-## Try the panel UI now
+| | |
+|---|---|
+| ![Filter page](docs/images/filter.png) | ![Mod matrix](docs/images/mod.png) |
+| ![Presets](docs/images/presets.png) | ![FX page in piano mode](docs/images/piano.png) |
 
-`qml demo/Main.qml` runs a preview of the keyboard-first panel against a mock
-engine (no sound). See [`demo/README.md`](demo/README.md).
+*Screenshots are rendered from `demo/` (mock engine, default Omarchy theme);
+the bar popup shows the same panel in your current theme.*
+
+## What it is
+
+- **Sound:** a class-by-class port of the Soundgineer TypeScript synth that
+  matches the original **bit for bit** on all 53 parity cases. It has
+  3 wavetable oscillators (morph, up to 16-voice unison, hard sync), sub and
+  noise oscillators, 2 filters (SVF, comb, formant) in series or parallel,
+  a shape stage, 6 envelopes, 8 drawable LFOs, 4 macros, a 32-slot mod
+  matrix, 8 effects and 59 factory presets.
+- **Engine:** `soundgineer-engine`, a headless daemon. It uses the JACK API,
+  which `pipewire-jack` provides on Omarchy, for audio out and MIDI in.
+  It starts on demand through a systemd user socket. It has no network
+  access: the unit restricts it to Unix sockets.
+- **Bar widget:** shows a power ring, a voice dot, stereo peak bars and the
+  patch name. Click it to open the panel; right-click toggles power.
 
 ## Install
 
-_Arrives in Phase 7._ The intended flow:
+You need Omarchy 4 and the build tools
+(`sudo pacman -S --needed base-devel cmake ninja pipewire-jack`). Then:
 
 ```bash
-omarchy plugin add <this-repo-url> --enable
-cd ~/.config/omarchy/plugins/<id> && ./install.sh   # builds the engine, no sudo
+omarchy plugin add <repo-url> --enable
+cd ~/.config/omarchy/plugins/<plugin-id>
+./install.sh             # engine, sg-ctl, sg-render, presets, systemd units
+./install.sh --plugins   # optional: also VST3 (~/.vst3), LV2 (~/.lv2), standalone
 ```
 
-## Building from source (developers)
+`install.sh` never uses sudo. It builds in `~/.cache/soundgineer` and installs
+to `~/.local/bin`, `~/.local/share/soundgineer` and
+`~/.local/share/systemd/user`. `./uninstall.sh` removes all of that and keeps
+your presets. An AUR `PKGBUILD` is in `packaging/aur/`.
 
-Needs CMake ≥ 3.24, a C++20 compiler, Ninja, and the JACK API headers
-(provided on Arch by `pipewire-jack`, which is also what the engine uses at
-runtime). On Arch: `sudo pacman -S --needed base-devel cmake ninja pipewire-jack`.
+## Usage
+
+Open the panel from the bar, or bind
+`omarchy-shell <plugin-id> toggle` to a key. Play it with a MIDI keyboard
+(connected automatically) or with the computer keyboard in piano mode.
+
+### Keyboard shortcuts
+
+| Keys | Action |
+|------|--------|
+| `h j k l` / arrows | move between sections and rows |
+| `+` / `-` | change the value; `_` (Shift+`-`) for a fine step down |
+| `Enter` / `Space` | toggle on/off or step a choice, load a preset, assign a mod slot |
+| `r` | reset the parameter to its default |
+| `Tab` / `Shift+Tab` / `1`–`6` | pages: Osc · Filter · Shape · Mod · FX · Presets |
+| `/` | search parameters and presets (type to filter, arrows, Enter) |
+| `p` | piano mode: `A W S E D F T G Y H U J K` play C–C, `Z` / `X` octave, `P` or `Esc` leave |
+| `o` | power on/off |
+| `Esc` | close the panel |
+| Mod page | `Enter` pick source → target, `e` slot on/off, `x` delete |
+| Presets page | `Enter` load, `f` favorite |
+
+Piano mode takes over the letter keys on purpose: `h j k` and `x` are
+navigation keys otherwise.
+
+### MIDI
+
+Note on/off with velocity, pitch bend, mod wheel (CC 1), sustain (CC 64),
+channel pressure, and CC 20–23 for macros 1–4.
+
+### From a terminal
 
 ```bash
-cmake -S . -B ~/.cache/soundgineer/build -G Ninja -DCMAKE_BUILD_TYPE=Release
-cmake --build ~/.cache/soundgineer/build
-ctest --test-dir ~/.cache/soundgineer/build --output-on-failure
-tools/omarchy-plugin-validate .
+sg-ctl load "Kalimba"          # load a preset
+sg-ctl note 60 0.9 0.5         # play middle C for half a second
+sg-ctl param filter1.cutoff 0.4
+sg-ctl save "My Pluck" Plucks  # -> ~/.local/share/soundgineer/presets/
+sg-ctl watch 5                 # live status
+sg-render --preset "Reese Bass" --midi riff.mid --out riff.wav   # offline render
 ```
 
-Build outside the repository: when it is installed as an Omarchy plugin,
-the shell reloads the plugin on every file written inside it. CMake refuses
-in-source builds for that reason.
+### Try the panel without installing
 
-The build downloads nothing: the engine depends only on the JACK API.
+```bash
+qml demo/Main.qml
+```
+
+This runs the panel against a mock engine (no sound) with plain Qt. See
+[`demo/README.md`](demo/README.md).
 
 ## Architecture
 
-See [`docs/architecture.md`](docs/architecture.md). In short: `engine/core`
-is a dependency-free DSP core ported class by class from the TypeScript
-reference; `soundgineer-engine` runs it headless on PipeWire with MIDI in;
-`plugin/` is the QML bar widget and service that talk to it over a private
-Unix socket ([`docs/protocol.md`](docs/protocol.md)).
+```
+omarchy-shell (Quickshell / QML)
+  plugin/Widget.qml   bar face + KeyboardPanel popup (one per monitor)
+  plugin/ui/          the panel (shared with demo/)
+  plugin/Service.qml  singleton, JSON lines over $XDG_RUNTIME_DIR/soundgineer.sock
+        │
+        ▼  systemd --user soundgineer.socket (0600) starts …
+soundgineer-engine  C++20 · JACK API (pipewire-jack) · lock-free queues
+        │
+engine/core  dependency-free DSP core, also used by
+             sg-render (offline), and VST3 / LV2 / standalone (DPF)
+```
+
+More detail: [`docs/architecture.md`](docs/architecture.md), the protocol in
+[`docs/protocol.md`](docs/protocol.md), and port decisions and parity results in
+[`docs/porting-notes.md`](docs/porting-notes.md).
+
+## Building from source
+
+```bash
+cmake -S . -B ~/.cache/soundgineer/dev -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build ~/.cache/soundgineer/dev
+ctest --test-dir ~/.cache/soundgineer/dev --output-on-failure
+tools/omarchy-plugin-validate .
+```
+
+- Build outside the repository. When the repository is installed as an
+  Omarchy plugin, the shell reloads the plugin on every file written inside
+  it, so CMake refuses in-source builds.
+- `-DSG_BUILD_PLUGINS=ON` adds VST3/LV2/standalone. It fetches DPF at a
+  pinned commit; pass `-DFETCHCONTENT_SOURCE_DIR_DPF=…` to build offline.
+- `ctest` runs the unit tests, the 59-preset load test and the parity suite:
+  53 golden renders from the reference, compared with `sg-render --parity`.
+- `sg-render --bench` measures CPU use. With 16 voices × 3 oscillators ×
+  4-voice unison it uses **10.1 % of one core** on a 2.3 GHz Xeon cloud vCPU.
+- Regenerating the golden files needs Node 22+ and a local reference checkout
+  (dev only); see [`tests/parity/README.md`](tests/parity/README.md).
+
+## Status and known gaps
+
+- Built and tested here: the engine, protocol and presets (`--dummy-audio`
+  mode), the parity suite, `install.sh` / `uninstall.sh`, and VST3 and LV2
+  discovery in Carla.
+- **Not yet tried on real hardware:** live PipeWire audio, MIDI devices, and
+  the plugin inside a running omarchy-shell. The container these were built
+  in has no sound server or Wayland session.
+- The LV2 build does not yet export the 59 programs as LV2 presets. The VST3
+  and standalone app have them as programs.
+- No custom GUI in VST3/LV2; hosts show their generic parameter view.
+- Wavetable/sample import works over the protocol (`setWavetable`,
+  `setSample`) but has no file picker in the panel yet.
 
 ## Privacy
 
@@ -55,5 +158,5 @@ of any kind at runtime.
 
 ## License
 
-MIT, see [`LICENSE`](LICENSE). Every dependency is MIT-compatible; see
-[`docs/porting-notes.md`](docs/porting-notes.md#licensing).
+MIT, see [`LICENSE`](LICENSE). Dependencies: the JACK API (pipewire-jack, MIT)
+and DPF (ISC, plugin targets only).

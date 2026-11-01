@@ -1,0 +1,41 @@
+{
+  "name": "Funk Clav",
+  "version": 1,
+  "category": "Keys",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0,
+    "osc1.morph": 0.75,
+    "osc1.level": 0.7,
+    "filter1.enabled": 1,
+    "filter1.type": 0.875,
+    "filter1.cutoff": 0.6666666666666667,
+    "filter1.resonance": 0.6,
+    "filter2.enabled": 1,
+    "filter2.type": 0,
+    "filter2.cutoff": 0.7670099985546603,
+    "filter2.keytrack": 0.5,
+    "env1.attack": 0,
+    "env1.decay": 0.7257724967479858,
+    "env1.sustain": 0.2,
+    "env1.release": 0.4134283002085334,
+    "env2.attack": 0,
+    "env2.decay": 0.5197953115119062,
+    "env2.sustain": 0,
+    "env2.release": 0.3607530084436579
+  },
+  "mods": [
+    {
+      "source": "env2",
+      "dest": "filter2.cutoff",
+      "depth": 0.3,
+      "enabled": true
+    },
+    {
+      "source": "velocity",
+      "dest": "filter2.cutoff",
+      "depth": 0.25,
+      "enabled": true
+    }
+  ]
+}

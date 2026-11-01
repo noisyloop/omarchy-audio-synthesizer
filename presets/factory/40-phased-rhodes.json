@@ -1,0 +1,59 @@
+{
+  "name": "Phased Rhodes",
+  "version": 1,
+  "category": "Keys",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.6666666666666666,
+    "osc1.morph": 0.12,
+    "osc1.level": 0.7,
+    "osc2.enabled": 1,
+    "osc2.wavetable": 0,
+    "osc2.morph": 0,
+    "osc2.level": 0.35,
+    "filter1.enabled": 1,
+    "filter1.type": 0,
+    "filter1.cutoff": 0.7993133362240125,
+    "filter1.keytrack": 0.5,
+    "env1.attack": 0.07525749891599529,
+    "env1.decay": 0.8356056702055514,
+    "env1.sustain": 0.25,
+    "env1.release": 0.6188134446610549,
+    "env2.attack": 0,
+    "env2.decay": 0.6505149978319905,
+    "env2.sustain": 0,
+    "env2.release": 0.5161208724347942,
+    "phaser.enabled": 1,
+    "phaser.rate": 0.517953147469658,
+    "phaser.depth": 0.6,
+    "phaser.feedback": 0.3157894736842105,
+    "phaser.mix": 0.45,
+    "comp.enabled": 1,
+    "comp.threshold": 0.6333333333333333,
+    "comp.ratio": 0.3058653605207225,
+    "comp.makeup": 0.16666666666666666,
+    "reverb.enabled": 1,
+    "reverb.size": 0.5,
+    "reverb.mix": 0.18
+  },
+  "mods": [
+    {
+      "source": "env2",
+      "dest": "osc1.morph",
+      "depth": 0.25,
+      "enabled": true
+    },
+    {
+      "source": "velocity",
+      "dest": "osc1.morph",
+      "depth": 0.25,
+      "enabled": true
+    },
+    {
+      "source": "macro1",
+      "dest": "phaser.mix",
+      "depth": 0.4,
+      "enabled": true
+    }
+  ]
+}

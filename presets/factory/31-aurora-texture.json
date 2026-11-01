@@ -1,0 +1,79 @@
+{
+  "name": "Aurora Texture",
+  "version": 1,
+  "category": "Pads",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.16666666666666666,
+    "osc1.morph": 0.2,
+    "osc1.unison": 0.13333333333333333,
+    "osc1.spread": 1,
+    "osc1.level": 0.45,
+    "osc2.enabled": 1,
+    "osc2.wavetable": 0.5,
+    "osc2.morph": 0.6,
+    "osc2.fine": 0.54,
+    "osc2.level": 0.4,
+    "osc3.enabled": 1,
+    "osc3.wavetable": 0.8333333333333334,
+    "osc3.morph": 0.5,
+    "osc3.transpose": 0.625,
+    "osc3.level": 0.2,
+    "filter.routing": 1,
+    "filter1.enabled": 1,
+    "filter1.type": 0,
+    "filter1.cutoff": 0.7253637530185604,
+    "filter2.enabled": 1,
+    "filter2.type": 0.5,
+    "filter2.cutoff": 0.5927170834612145,
+    "filter2.resonance": 0.4,
+    "env1.attack": 0.8494850021680093,
+    "env1.decay": 0.8252574989159952,
+    "env1.sustain": 0.9,
+    "env1.release": 0.8518652406477594,
+    "lfo1.sync": 0,
+    "lfo1.rate": 0.16714324380422171,
+    "lfo1.mode": 0.5,
+    "lfo2.sync": 0,
+    "lfo2.rate": 0.23461520409122802,
+    "lfo2.mode": 0.5,
+    "lfo3.sync": 0,
+    "lfo3.rate": 0.19404729682981522,
+    "lfo3.mode": 0.5,
+    "lfo4.sync": 0,
+    "lfo4.rate": 0.13245788683929255,
+    "lfo4.mode": 0.5,
+    "phaser.enabled": 1,
+    "phaser.rate": 0.43575558719297985,
+    "phaser.mix": 0.4,
+    "reverb.enabled": 1,
+    "reverb.size": 0.9,
+    "reverb.mix": 0.5
+  },
+  "mods": [
+    {
+      "source": "lfo1",
+      "dest": "osc1.morph",
+      "depth": 0.5,
+      "enabled": true
+    },
+    {
+      "source": "lfo2",
+      "dest": "osc2.morph",
+      "depth": 0.4,
+      "enabled": true
+    },
+    {
+      "source": "lfo3",
+      "dest": "osc3.morph",
+      "depth": 0.5,
+      "enabled": true
+    },
+    {
+      "source": "lfo4",
+      "dest": "filter2.cutoff",
+      "depth": 0.25,
+      "enabled": true
+    }
+  ]
+}

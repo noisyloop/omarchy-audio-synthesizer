@@ -1,0 +1,45 @@
+# Maintainer: OWNER
+# Soundgineer engine, CLI tools, factory presets, systemd user units, and the
+# VST3 / LV2 / standalone app. The Omarchy bar widget itself is installed with
+# `omarchy plugin add <repo-url>`; this package replaces ./install.sh.
+pkgname=soundgineer
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Wavetable synthesizer for Omarchy: headless PipeWire engine, CLI, VST3/LV2"
+arch=('x86_64' 'aarch64')
+url="https://github.com/OWNER/omarchy-audio-synthesizer"
+license=('MIT')
+depends=('pipewire-jack' 'gcc-libs' 'glibc')
+makedepends=('cmake' 'ninja' 'git' 'pkgconf')
+_dpf_commit=4238e1c7f0351bbe488d79f0899c540543ac7583
+source=("$pkgname::git+$url.git#tag=v$pkgver"
+        "dpf::git+https://github.com/DISTRHO/DPF.git#commit=$_dpf_commit")
+sha256sums=('SKIP' 'SKIP')
+
+build() {
+  cmake -S "$pkgname" -B build -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DSG_BUILD_PLUGINS=ON \
+    -DFETCHCONTENT_FULLY_DISCONNECTED=ON \
+    -DFETCHCONTENT_SOURCE_DIR_DPF="$srcdir/dpf"
+  cmake --build build
+}
+
+check() {
+  ctest --test-dir build --output-on-failure
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  install -d "$pkgdir/usr/share/soundgineer/factory" "$pkgdir/usr/lib/lv2" "$pkgdir/usr/lib/vst3"
+  install -m644 "$pkgname"/presets/factory/*.json "$pkgdir/usr/share/soundgineer/factory/"
+  install -Dm644 "$pkgname/packaging/systemd/soundgineer.socket" "$pkgdir/usr/lib/systemd/user/soundgineer.socket"
+  sed 's|%h/.local/bin/soundgineer-engine|/usr/bin/soundgineer-engine|' "$pkgname/packaging/systemd/soundgineer.service" \
+    > soundgineer.service
+  install -Dm644 soundgineer.service "$pkgdir/usr/lib/systemd/user/soundgineer.service"
+  cp -r build/bin/soundgineer.lv2 "$pkgdir/usr/lib/lv2/"
+  cp -r build/bin/soundgineer.vst3 "$pkgdir/usr/lib/vst3/"
+  install -Dm755 build/bin/soundgineer "$pkgdir/usr/bin/soundgineer-standalone"
+  install -Dm644 "$pkgname/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

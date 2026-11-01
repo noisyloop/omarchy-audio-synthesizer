@@ -1,0 +1,54 @@
+{
+  "name": "Shimmer Pad",
+  "version": 1,
+  "category": "Pads",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.16666666666666666,
+    "osc1.morph": 0.3,
+    "osc1.unison": 0.26666666666666666,
+    "osc1.detune": 0.12,
+    "osc1.level": 0.5,
+    "osc2.enabled": 1,
+    "osc2.wavetable": 0.16666666666666666,
+    "osc2.morph": 0.5,
+    "osc2.unison": 0.13333333333333333,
+    "osc2.detune": 0.1,
+    "osc2.transpose": 0.6979166666666666,
+    "osc2.level": 0.25,
+    "filter1.enabled": 1,
+    "filter1.type": 0,
+    "filter1.cutoff": 0.8257070849065542,
+    "env1.attack": 0.7940228147639202,
+    "env1.decay": 0.8252574989159952,
+    "env1.sustain": 0.8,
+    "env1.release": 0.8196234957781711,
+    "lfo1.sync": 0,
+    "lfo1.rate": 0.21602950874140342,
+    "lfo1.mode": 0.5,
+    "lfo2.sync": 0,
+    "lfo2.rate": 0.25071486570633256,
+    "lfo2.mode": 0.5,
+    "delay.enabled": 1,
+    "delay.division": 0.25,
+    "delay.mix": 0.25,
+    "reverb.enabled": 1,
+    "reverb.size": 0.95,
+    "reverb.damp": 0.2,
+    "reverb.mix": 0.5
+  },
+  "mods": [
+    {
+      "source": "lfo1",
+      "dest": "osc1.morph",
+      "depth": 0.4,
+      "enabled": true
+    },
+    {
+      "source": "lfo2",
+      "dest": "osc2.morph",
+      "depth": 0.35,
+      "enabled": true
+    }
+  ]
+}

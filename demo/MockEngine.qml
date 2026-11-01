@@ -1,5 +1,5 @@
 import QtQuick
-import "Model.js" as Model
+import "../plugin/ui/Model.js" as Model
 
 // Stands in for plugin/Service.qml + soundgineer-engine: holds the patch,
 // "plays" held notes, and produces scope/spectrum/peak telemetry at 30 Hz so
@@ -8,6 +8,13 @@ QtObject {
   id: engine
 
   property bool powered: true
+  readonly property var presets: {
+    var out = []
+    for (var cat in Model.PRESETS)
+      Model.PRESETS[cat].forEach(function(n) { out.push({ name: n, category: cat }) })
+    return out
+  }
+  function setPower(on) { powered = on; if (!on) held = [] }
   property string patchName: "Init"
   property var values: Model.defaults()
   property var matrix: [

@@ -1,0 +1,44 @@
+{
+  "name": "Drawbar Organ",
+  "version": 1,
+  "category": "Keys",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0,
+    "osc1.morph": 0,
+    "osc1.level": 0.5,
+    "osc2.enabled": 1,
+    "osc2.wavetable": 0,
+    "osc2.morph": 0,
+    "osc2.transpose": 0.625,
+    "osc2.level": 0.35,
+    "osc3.enabled": 1,
+    "osc3.wavetable": 0,
+    "osc3.morph": 0,
+    "osc3.transpose": 0.6979166666666666,
+    "osc3.level": 0.25,
+    "sub.enabled": 1,
+    "sub.shape": 0,
+    "sub.octave": 0.6666666666666666,
+    "sub.level": 0.4,
+    "filter1.enabled": 1,
+    "filter1.type": 0,
+    "filter1.cutoff": 0.8996566681120063,
+    "env1.attack": 0.11928031367991558,
+    "env1.decay": 0.5,
+    "env1.sustain": 1,
+    "env1.release": 0.3607530084436579,
+    "chorus.enabled": 1,
+    "chorus.rate": 0.5463041903939285,
+    "chorus.depth": 0.7,
+    "chorus.mix": 0.5
+  },
+  "mods": [
+    {
+      "source": "modwheel",
+      "dest": "chorus.rate",
+      "depth": 0.3,
+      "enabled": true
+    }
+  ]
+}

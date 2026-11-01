@@ -1,0 +1,43 @@
+{
+  "name": "Reese Bass",
+  "version": 1,
+  "category": "Bass",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0,
+    "osc1.morph": 0.7,
+    "osc1.unison": 0.06666666666666667,
+    "osc1.detune": 0.35,
+    "osc1.blend": 1,
+    "osc1.spread": 0,
+    "osc1.transpose": 0.375,
+    "osc1.level": 0.6,
+    "osc2.enabled": 1,
+    "osc2.wavetable": 0,
+    "osc2.morph": 0.7,
+    "osc2.transpose": 0.375,
+    "osc2.fine": 0.56,
+    "osc2.level": 0.5,
+    "filter1.enabled": 1,
+    "filter1.type": 0.125,
+    "filter1.cutoff": 0.5146893481167586,
+    "filter1.resonance": 0.1,
+    "filter1.drive": 0.4,
+    "env1.attack": 0.11928031367991558,
+    "env1.decay": 0.6747425010840046,
+    "env1.sustain": 1,
+    "env1.release": 0.4838791275652058,
+    "dist.type": 0.25,
+    "dist.drive": 0.3,
+    "eq.enabled": 1,
+    "eq.low_gain": 0.5555555555555556
+  },
+  "mods": [
+    {
+      "source": "modwheel",
+      "dest": "filter1.cutoff",
+      "depth": 0.3,
+      "enabled": true
+    }
+  ]
+}

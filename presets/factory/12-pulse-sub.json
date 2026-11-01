@@ -1,0 +1,54 @@
+{
+  "name": "Pulse Sub",
+  "version": 1,
+  "category": "Bass",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.3333333333333333,
+    "osc1.morph": 0.45,
+    "osc1.transpose": 0.375,
+    "osc1.level": 0.5,
+    "sub.enabled": 1,
+    "sub.shape": 0.3333333333333333,
+    "sub.octave": 0.6666666666666666,
+    "sub.level": 0.75,
+    "filter1.enabled": 1,
+    "filter1.type": 0.125,
+    "filter1.cutoff": 0.49237375157322083,
+    "filter1.resonance": 0.2,
+    "env1.attack": 0.07525749891599529,
+    "env1.decay": 0.6192803136799155,
+    "env1.sustain": 0.85,
+    "env1.release": 0.43843694043922604,
+    "env2.attack": 0,
+    "env2.decay": 0.5856056702055515,
+    "env2.sustain": 0.1,
+    "env2.release": 0.43843694043922604,
+    "lfo1.sync": 1,
+    "lfo1.division": 0.8333333333333334,
+    "comp.enabled": 1,
+    "comp.threshold": 0.6666666666666666,
+    "comp.ratio": 0.46275642631951835,
+    "comp.makeup": 0.16666666666666666
+  },
+  "mods": [
+    {
+      "source": "env2",
+      "dest": "filter1.cutoff",
+      "depth": 0.3,
+      "enabled": true
+    },
+    {
+      "source": "macro1",
+      "dest": "osc1.morph",
+      "depth": 0.4,
+      "enabled": true
+    },
+    {
+      "source": "macro2",
+      "dest": "filter1.cutoff",
+      "depth": 0.35,
+      "enabled": true
+    }
+  ]
+}

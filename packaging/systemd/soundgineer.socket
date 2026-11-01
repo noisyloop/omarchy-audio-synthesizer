@@ -1,0 +1,9 @@
+[Unit]
+Description=Soundgineer synth engine control socket
+
+[Socket]
+ListenStream=%t/soundgineer.sock
+SocketMode=0600
+
+[Install]
+WantedBy=sockets.target

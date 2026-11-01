@@ -1,0 +1,46 @@
+{
+  "name": "Breath Flute",
+  "version": 1,
+  "category": "Leads",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0,
+    "osc1.morph": 0.05,
+    "osc1.level": 0.6,
+    "noise.enabled": 1,
+    "noise.type": 0.5,
+    "noise.level": 0.15,
+    "filter1.enabled": 1,
+    "filter1.type": 0,
+    "filter1.cutoff": 0.7670099985546603,
+    "filter1.keytrack": 0.6,
+    "env1.attack": 0.44453781259591085,
+    "env1.decay": 0.6505149978319905,
+    "env1.sustain": 0.85,
+    "env1.release": 0.5411295126654869,
+    "lfo1.sync": 0,
+    "lfo1.rate": 0.7492851342936674,
+    "reverb.enabled": 1,
+    "reverb.mix": 0.25
+  },
+  "mods": [
+    {
+      "source": "lfo1",
+      "dest": "osc1.fine",
+      "depth": 0.035,
+      "enabled": true
+    },
+    {
+      "source": "lfo1",
+      "dest": "osc1.level",
+      "depth": 0.08,
+      "enabled": true
+    },
+    {
+      "source": "aftertouch",
+      "dest": "osc1.level",
+      "depth": 0.1,
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "name": "Fuzz Mono",
+  "version": 1,
+  "category": "Leads",
+  "params": {
+    "master.polyphony": 0,
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.3333333333333333,
+    "osc1.morph": 0.2,
+    "osc1.level": 0.7,
+    "osc2.enabled": 1,
+    "osc2.wavetable": 0,
+    "osc2.morph": 0.7,
+    "osc2.transpose": 0.375,
+    "osc2.fine": 0.53,
+    "osc2.level": 0.4,
+    "filter1.enabled": 1,
+    "filter1.type": 0.125,
+    "filter1.cutoff": 0.715376011892746,
+    "filter1.resonance": 0.3,
+    "env1.attack": 0.11928031367991558,
+    "env1.decay": 0.6505149978319905,
+    "env1.sustain": 1,
+    "env1.release": 0.4838791275652058,
+    "lfo1.sync": 0,
+    "lfo1.rate": 0.7607765267907048,
+    "fxdist.enabled": 1,
+    "fxdist.drive": 0.7,
+    "fxdist.tone": 0.6919215560914728,
+    "fxdist.mix": 0.8,
+    "delay.enabled": 1,
+    "delay.division": 0.3333333333333333,
+    "delay.mix": 0.18
+  },
+  "mods": [
+    {
+      "source": "aftertouch",
+      "dest": "filter1.cutoff",
+      "depth": 0.25,
+      "enabled": true
+    },
+    {
+      "source": "lfo1",
+      "dest": "osc1.fine",
+      "depth": 0.03,
+      "enabled": true
+    },
+    {
+      "source": "macro1",
+      "dest": "fxdist.drive",
+      "depth": 0.3,
+      "enabled": true
+    }
+  ]
+}

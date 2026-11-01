@@ -5,6 +5,8 @@ import QtQuick
 Rectangle {
   id: picker
 
+  required property var theme
+
   property string title: ""
   property var items: []          // [{ label, data }]
   property string query: ""
@@ -24,8 +26,8 @@ Rectangle {
   function close() { visible = false }
 
   visible: false
-  color: Qt.alpha(Theme.background, 0.96)
-  border.color: Theme.popupBorder
+  color: Qt.alpha(theme.background, 0.97)
+  border.color: theme.popupBorder
   border.width: 1
   radius: 6
 
@@ -43,27 +45,27 @@ Rectangle {
 
   Column {
     anchors.fill: parent
-    anchors.margins: Theme.padding
-    spacing: Theme.gap
+    anchors.margins: theme.padding
+    spacing: theme.gap
 
     Text {
       text: picker.title
-      color: Theme.dim
-      font.family: Theme.fontFamily
-      font.pixelSize: Theme.caption
+      color: theme.dim
+      font.family: theme.fontFamily
+      font.pixelSize: theme.caption
     }
     Rectangle {
       width: parent.width
       height: 26
       radius: 4
-      color: Theme.faint
+      color: theme.faint
       Text {
         x: 8
         anchors.verticalCenter: parent.verticalCenter
         text: "/ " + picker.query + "▏"
-        color: Theme.popupText
-        font.family: Theme.fontFamily
-        font.pixelSize: Theme.body
+        color: theme.popupText
+        font.family: theme.fontFamily
+        font.pixelSize: theme.body
       }
     }
     ListView {
@@ -77,6 +79,7 @@ Rectangle {
       delegate: ItemRow {
         required property var modelData
         required property int index
+        theme: picker.theme
         width: list.width
         label: modelData.label
         current: index === picker.index

@@ -1,0 +1,70 @@
+{
+  "name": "Granite Drone",
+  "version": 1,
+  "category": "Pads",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.8333333333333334,
+    "osc1.morph": 0.2,
+    "osc1.transpose": 0.375,
+    "osc1.unison": 0.2,
+    "osc1.detune": 0.25,
+    "osc1.level": 0.55,
+    "osc2.enabled": 1,
+    "osc2.wavetable": 0.16666666666666666,
+    "osc2.morph": 0.5,
+    "osc2.transpose": 0.5729166666666666,
+    "osc2.level": 0.3,
+    "sub.enabled": 1,
+    "sub.shape": 0,
+    "sub.octave": 0.3333333333333333,
+    "sub.level": 0.4,
+    "filter1.enabled": 1,
+    "filter1.type": 0.875,
+    "filter1.cutoff": 0.3920304196852271,
+    "filter1.resonance": 0.6,
+    "filter1.mix": 0.6,
+    "filter2.enabled": 1,
+    "filter2.type": 0.125,
+    "filter2.cutoff": 0.6343633289973145,
+    "filter2.resonance": 0.2,
+    "env1.attack": 0.8494850021680093,
+    "env1.decay": 0.8252574989159952,
+    "env1.sustain": 1,
+    "env1.release": 0.8518652406477594,
+    "lfo1.sync": 0,
+    "lfo1.rate": 0.13245788683929255,
+    "lfo1.mode": 0.5,
+    "lfo2.sync": 0,
+    "lfo2.rate": 0.23461520409122802,
+    "lfo2.mode": 0.5,
+    "fxdist.enabled": 1,
+    "fxdist.drive": 0.3,
+    "fxdist.tone": 0.6018143876079656,
+    "fxdist.mix": 0.4,
+    "reverb.enabled": 1,
+    "reverb.size": 1,
+    "reverb.damp": 0.7,
+    "reverb.mix": 0.5
+  },
+  "mods": [
+    {
+      "source": "lfo1",
+      "dest": "osc1.morph",
+      "depth": 0.5,
+      "enabled": true
+    },
+    {
+      "source": "lfo2",
+      "dest": "filter1.cutoff",
+      "depth": 0.3,
+      "enabled": true
+    },
+    {
+      "source": "macro1",
+      "dest": "fxdist.drive",
+      "depth": 0.5,
+      "enabled": true
+    }
+  ]
+}

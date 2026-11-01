@@ -1,0 +1,48 @@
+{
+  "name": "Morphing Pad",
+  "version": 1,
+  "category": "Starter",
+  "params": {
+    "osc1.enabled": 1,
+    "osc1.wavetable": 0.5,
+    "osc1.unison": 0.4,
+    "osc1.detune": 0.16,
+    "osc1.spread": 0.9,
+    "osc1.level": 0.55,
+    "osc2.enabled": 1,
+    "osc2.wavetable": 0.16666666666666666,
+    "osc2.unison": 0.26666666666666666,
+    "osc2.detune": 0.12,
+    "osc2.transpose": 0.625,
+    "osc2.level": 0.3,
+    "filter1.enabled": 1,
+    "filter1.type": 0,
+    "filter1.cutoff": 0.6804642283860751,
+    "filter1.resonance": 0.15,
+    "env1.attack": 0.7385606273598312,
+    "env1.decay": 0.7940228147639202,
+    "env1.sustain": 0.8,
+    "env1.release": 0.76237311067789,
+    "lfo1.rate": 0.2996011306435143,
+    "lfo1.sync": 0,
+    "chorus.enabled": 1,
+    "chorus.mix": 0.4,
+    "reverb.enabled": 1,
+    "reverb.size": 0.85,
+    "reverb.mix": 0.35
+  },
+  "mods": [
+    {
+      "source": "lfo1",
+      "dest": "osc1.morph",
+      "depth": 0.6,
+      "enabled": true
+    },
+    {
+      "source": "lfo2",
+      "dest": "osc2.morph",
+      "depth": 0.3,
+      "enabled": true
+    }
+  ]
+}
