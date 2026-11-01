@@ -8,9 +8,9 @@ sound**: the scope, spectrum, levels and voice dots are simulated.
 qml demo/Main.qml          # Arch: provided by qt6-declarative (already on Omarchy)
 ```
 
-What it is for: trying the layout and the keys before the real plugin UI
-(Phase 5) is built. Once settled, its pages move into `plugin/` and switch from
-the stand-in `Theme` singleton to the shell's `Commons.Color` / `Style` tokens.
+The panel itself is `plugin/ui/PanelBody.qml`, the exact file the Omarchy
+plugin shows in its bar popup. The demo only swaps in a stand-in theme and a
+mock engine, so what you see here is what the plugin shows.
 
 ## Keys
 
@@ -41,8 +41,7 @@ QT_QPA_PLATFORM=offscreen qml demo/Main.qml -- --screenshot out.png \
 
 | File | Role |
 |------|------|
-| `Main.qml` | window, header (scope, spectrum, voices, peak), pages, keys |
-| `MockEngine.qml` | fake patch state and 30 Hz telemetry |
-| `Model.js` | parameter ids, ranges, curves and the 59 factory preset names, from the reference |
-| `ItemRow.qml`, `Picker.qml` | row and filterable picker components |
+| `Main.qml` | window, screenshot flags; hosts `plugin/ui/PanelBody.qml` |
+| `MockEngine.qml` | fake patch state and 30 Hz telemetry (same API as `plugin/Service.qml`) |
 | `Theme.qml` | stand-in for the shell theme tokens |
+| `../plugin/ui/` | the shared panel: `PanelBody.qml`, `ItemRow.qml`, `Picker.qml`, `Model.js` |
