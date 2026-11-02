@@ -451,6 +451,8 @@ void Server::handle(Client& c, const std::string& line) {
     const std::string type = msg["type"].asString();
 
     if (type == "hello") {
+        // A UI connecting: follow whatever the default output is right now.
+        if (engine_.running() && !dummyAudio_) engine_.connectToDefaultOutput();
         Json m = Json::object();
         m.set("type", "hello");
         m.set("version", versionString());

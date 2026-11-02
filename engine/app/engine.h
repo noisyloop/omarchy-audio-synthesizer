@@ -42,6 +42,8 @@ public:
     /** Start audio. With dummyAudio, a timer thread stands in for JACK (testing). */
     bool start(bool dummyAudio, std::string& error);
     void stop();
+    /** Link the outputs to PipeWire's current default sink (control thread). */
+    void connectToDefaultOutput();
     bool running() const noexcept { return running_; }
     double sampleRate() const noexcept { return sampleRate_; }
 

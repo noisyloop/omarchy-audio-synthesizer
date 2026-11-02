@@ -2,7 +2,11 @@
 
 #include <jack/midiport.h>
 
+#include <algorithm>
 #include <chrono>
+#include <cstdio>
+#include <string>
+#include <vector>
 #include <cstring>
 #include <random>
 
@@ -67,19 +71,85 @@ bool Engine::start(bool dummyAudio, std::string& error) {
         client_ = nullptr;
         return false;
     }
-    // Auto-connect: stereo out to the first two physical playback ports, MIDI
-    // in from every hardware MIDI source (PipeWire bridges ALSA MIDI to JACK).
-    if (const char** ports = jack_get_ports(client_, nullptr, JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput | JackPortIsPhysical)) {
-        if (ports[0]) jack_connect(client_, jack_port_name(outL_), ports[0]);
-        if (ports[0] && ports[1]) jack_connect(client_, jack_port_name(outR_), ports[1]);
-        jack_free(ports);
-    }
+    // Auto-connect: stereo out to the default output (what other apps use),
+    // MIDI in from every hardware MIDI source (PipeWire bridges ALSA MIDI).
+    connectToDefaultOutput();
     if (const char** ports = jack_get_ports(client_, nullptr, JACK_DEFAULT_MIDI_TYPE, JackPortIsOutput | JackPortIsPhysical)) {
         for (const char** p = ports; *p; ++p) jack_connect(client_, *p, jack_port_name(midiIn_));
         jack_free(ports);
     }
     running_ = true;
     return true;
+}
+
+static std::string trim(std::string s) {
+    while (!s.empty() && (s.back() == '\n' || s.back() == '\r' || s.back() == ' ' || s.back() == '\t')) s.pop_back();
+    std::size_t b = 0;
+    while (b < s.size() && (s[b] == ' ' || s[b] == '\t')) b++;
+    return s.substr(b);
+}
+
+// PipeWire's default sink as {node.name, description}. pipewire-jack names
+// ports "<description>:playback_FL", so both are needed. Control thread only.
+static std::pair<std::string, std::string> defaultSink() {
+    std::string name, desc;
+    if (FILE* p = ::popen("LC_ALL=C pactl get-default-sink 2>/dev/null", "r")) {
+        char buf[512];
+        if (std::fgets(buf, sizeof buf, p)) name = trim(buf);
+        ::pclose(p);
+    }
+    if (name.empty()) return {};
+    if (FILE* p = ::popen("LC_ALL=C pactl list sinks 2>/dev/null", "r")) {
+        char buf[1024];
+        bool inSink = false;
+        while (std::fgets(buf, sizeof buf, p)) {
+            const std::string line = trim(buf);
+            if (line.rfind("Name: ", 0) == 0) inSink = line.substr(6) == name;
+            else if (inSink && line.rfind("Description: ", 0) == 0) { desc = line.substr(13); inSink = false; }
+        }
+        ::pclose(p);
+    }
+    return {name, desc};
+}
+
+void Engine::connectToDefaultOutput() {
+    if (!client_) return;
+    // Drop existing output links, then link to the default sink's ports.
+    jack_port_disconnect(client_, outL_);
+    jack_port_disconnect(client_, outR_);
+    std::vector<std::string> targets;
+    const auto [sink, desc] = defaultSink();
+    const char** ports = jack_get_ports(client_, nullptr, JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput);
+    if (ports && !sink.empty()) {
+        const std::string prefix = sink + ":";
+        const std::string descPrefix = desc.empty() ? std::string("\x01") : desc + ":";
+        const int size = jack_port_name_size();
+        std::vector<char> a1(static_cast<std::size_t>(size)), a2(static_cast<std::size_t>(size));
+        for (const char** p = ports; *p; ++p) {
+            jack_port_t* port = jack_port_by_name(client_, *p);
+            if (!port) continue;
+            char* aliases[2] = {a1.data(), a2.data()};
+            const int n = jack_port_get_aliases(port, aliases);
+            const std::string pn(*p);
+            if (pn.find(":playback_") == std::string::npos) continue;
+            bool match = pn.rfind(prefix, 0) == 0 || pn.rfind(descPrefix, 0) == 0;
+            for (int i = 0; i < n && !match; i++) match = std::string(aliases[i]).rfind(prefix, 0) == 0;
+            if (match) targets.emplace_back(pn);
+        }
+    }
+    if (targets.empty() && ports) {  // fallback: first physical playback ports
+        if (const char** phys = jack_get_ports(client_, nullptr, JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput | JackPortIsPhysical)) {
+            for (const char** p = phys; *p && targets.size() < 2; ++p) targets.emplace_back(*p);
+            jack_free(phys);
+        }
+    }
+    if (ports) jack_free(ports);
+    std::sort(targets.begin(), targets.end());  // ..._FL before ..._FR
+    if (!targets.empty()) jack_connect(client_, jack_port_name(outL_), targets[0].c_str());
+    if (targets.size() > 1) jack_connect(client_, jack_port_name(outR_), targets[1].c_str());
+    else if (!targets.empty()) jack_connect(client_, jack_port_name(outR_), targets[0].c_str());
+    std::fprintf(stderr, "soundgineer-engine: output -> %s%s\n", targets.empty() ? "(nothing found)" : (targets[0] + (targets.size() > 1 ? " + " + targets[1] : "")).c_str(),
+                 sink.empty() ? " (default sink unknown, used first hardware output)" : "");
 }
 
 void Engine::stop() {
