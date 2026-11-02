@@ -120,8 +120,9 @@ int main(int argc, char** argv) {
         return 1;
     }
     server.restoreSession();
-    std::fprintf(stderr, "soundgineer-engine %s: listening on %s, presets in %s\n", sg::versionString(),
-                 inherited >= 0 ? "systemd socket" : paths.socket.c_str(), paths.factoryPresets.c_str());
+    std::fprintf(stderr, "soundgineer-engine %s: listening on %s, %zu factory presets built in, user presets in %s\n",
+                 sg::versionString(), inherited >= 0 ? "systemd socket" : paths.socket.c_str(),
+                 sg::Server::factory().size(), paths.userPresets.c_str());
     server.run(gStop);
     server.saveSession();
     engine.stop();

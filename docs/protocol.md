@@ -54,7 +54,7 @@ messages are replaced by `setWavetable` / `setSample` with file paths.
 | → engine | `listFiles` | `{ "kind": "wavetable" }` or `"sample"`: WAVs in `$XDG_DATA_HOME/soundgineer/{wavetables,samples}` and `~/Music` (≤ 500) |
 | engine → | `fileList` | `{ "kind", "files": [{ "name", "path" }] }` |
 | → engine | `listPresets` | `{}` |
-| engine → | `presetList` | `{ "presets": [{ "name", "category", "factory", "favorite", "path" }] }` |
+| engine → | `presetList` | `{ "presets": [{ "name", "category", "factory", "favorite", "path" }], "userDir" }`. Factory presets are compiled into the engine; their `path` is `factory:<name>`. |
 | → engine | `loadPreset` | `{ "name": "Kalimba" }`; replies with `state` to everyone |
 | → engine | `savePreset` | `{ "name": "My Lead", "category": "Leads" }` → `$XDG_DATA_HOME/soundgineer/presets/my-lead.json` |
 | engine → | `saved` | `{ "path": "..." }` |

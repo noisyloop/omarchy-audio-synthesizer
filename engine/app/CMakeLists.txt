@@ -9,6 +9,11 @@ find_package(Threads REQUIRED)
 add_executable(soundgineer-engine engine_main.cpp engine.cpp server.cpp)
 target_link_libraries(soundgineer-engine PRIVATE sg_core PkgConfig::JACK Threads::Threads)
 
+# Factory presets are compiled in, so they can never be missing at runtime.
+include(${PROJECT_SOURCE_DIR}/cmake/EmbedPresets.cmake)
+sg_embed_factory_presets(${CMAKE_CURRENT_BINARY_DIR}/factory_presets.inc)
+target_include_directories(soundgineer-engine PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   target_compile_options(soundgineer-engine PRIVATE -Wall -Wextra)
 endif()

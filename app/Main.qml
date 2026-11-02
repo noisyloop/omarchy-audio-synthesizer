@@ -108,5 +108,9 @@ Window {
     }
   }
 
-  Component.onCompleted: { sock.open(); panel.forceActiveFocus() }
+  Component.onCompleted: {
+    sock.open()
+    panel.forceActiveFocus()
+    if (startPage >= 1 && startPage <= 6) panel.goPage(startPage - 1)
+  }
 }

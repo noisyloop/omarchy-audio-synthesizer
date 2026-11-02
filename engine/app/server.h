@@ -29,6 +29,8 @@ public:
     /** Poll loop; returns when `stop` becomes true. */
     void run(const volatile bool& stop);
     void saveSession();
+    /** The 59 factory presets compiled into the binary. */
+    static const std::vector<Json>& factory();
     void restoreSession();
 
 private:

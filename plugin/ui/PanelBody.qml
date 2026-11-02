@@ -59,6 +59,8 @@ FocusScope {
     if (key === "presets") {
       var out = []
       var favs = Object.keys(engine.favorites).sort()
+      if (!engine.presets || engine.presets.length === 0)
+        return [{ title: "PRESETS", width: 420, items: [{ kind: "nopresets" }] }]
       out.push({ title: "★ FAVORITES", items: favs.length ? favs.map(function(n) { return { kind: "preset", name: n } }) : [{ kind: "none" }] })
       var cats = presetCategories()
       for (var c = 0; c < cats.length; c++)
@@ -531,6 +533,7 @@ FocusScope {
                     if (slot) return (slot.enabled ? "" : "(off) ") + win.sourceLabel(slot.source) + " → " + win.destLabel(slot.dest)
                     if (modelData.kind === "add") return "+ add slot"
                     if (modelData.kind === "none") return "f marks a favorite"
+                    if (modelData.kind === "nopresets") return "No presets from the engine yet. Check: sg-ctl presets"
                     return modelData.name
                   }
                   bar: {
@@ -549,7 +552,7 @@ FocusScope {
                   dimmed: {
                     rev
                     if (slot) return !slot.enabled
-                    if (modelData.kind === "add" || modelData.kind === "none") return true
+                    if (modelData.kind === "add" || modelData.kind === "none" || modelData.kind === "nopresets") return true
                     if (!d) return false
                     var grp = d.id.split(".")[0]
                     var on = Model.params[grp + ".enabled"]
