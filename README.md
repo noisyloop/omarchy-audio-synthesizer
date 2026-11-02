@@ -98,6 +98,14 @@ connect.
 Piano mode takes over the letter keys on purpose: `h j k` and `x` are
 navigation keys otherwise.
 
+### No sound?
+
+Soundgineer plays to your **default output**, the same one other apps use.
+It picks that up when the engine starts, whenever the app or bar panel opens,
+and when you toggle power (`o`, or right-click the bar widget). If you switch
+outputs while it's open, press `o` twice. To see where it's connected:
+`pw-link -l | grep -A1 Soundgineer:out`.
+
 ### Finding presets
 
 There are 59 factory presets in 7 groups: Starter, Bass, Leads, Pads, Keys,
