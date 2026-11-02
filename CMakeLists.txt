@@ -18,6 +18,7 @@ endif()
 option(SG_BUILD_ENGINE  "Build the soundgineer-engine daemon (needs the JACK API, e.g. pipewire-jack)" ON)
 option(SG_BUILD_PLUGINS "Build VST3/LV2/Standalone targets with DPF (Phase 6)" OFF)
 option(SG_BUILD_TESTS   "Build unit and parity tests" ON)
+option(SG_BUILD_APP     "Build the soundgineer window app (needs Qt 6 Quick)" ON)
 
 # Pure C++ DSP core and the dependency-free tools.
 add_subdirectory(engine/core)
@@ -29,6 +30,10 @@ endif()
 
 if(SG_BUILD_PLUGINS)
   add_subdirectory(engine/plugins)
+endif()
+
+if(SG_BUILD_APP)
+  add_subdirectory(app)
 endif()
 
 if(SG_BUILD_TESTS)
