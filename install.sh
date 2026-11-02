@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Build and install the Soundgineer engine for the current user. No sudo.
 #
-#   ./install.sh            engine + CLI tools + factory presets + systemd user units
+#   ./install.sh            engine, the Soundgineer window app, CLI tools, presets, systemd units
 #   ./install.sh --plugins  also build the VST3 / LV2 / standalone app (fetches DPF)
 #   ./install.sh --no-start install without enabling soundgineer.socket
 #
 # Writes only to: ~/.cache/soundgineer (build), ~/.local/bin,
-# ~/.local/share/soundgineer, ~/.local/share/systemd/user, and with --plugins
+# ~/.local/share/soundgineer, ~/.local/share/systemd/user,
+# ~/.local/share/applications, and with --plugins
 # ~/.lv2 and ~/.vst3 (the standard per-user plugin folders hosts scan).
 set -euo pipefail
 
@@ -64,6 +65,13 @@ cp "$src"/presets/factory/*.json "$data/soundgineer/factory/"
 install -m 0644 "$src/packaging/systemd/soundgineer.socket" "$data/systemd/user/soundgineer.socket"
 install -m 0644 "$src/packaging/systemd/soundgineer.service" "$data/systemd/user/soundgineer.service"
 
+if [[ -x "$prefix/bin/soundgineer" ]]; then
+  mkdir -p "$data/applications"
+  sed "s|^Exec=soundgineer|Exec=$prefix/bin/soundgineer|" "$src/app/soundgineer.desktop" > "$data/applications/soundgineer.desktop"
+else
+  echo "!!  Qt 6 Quick not found, so the Soundgineer window app was skipped (sudo pacman -S --needed qt6-declarative)."
+fi
+
 if [[ $plugins == 1 ]]; then
   echo "==> Installing VST3 / LV2 / standalone"
   mkdir -p "$HOME/.lv2" "$HOME/.vst3"
@@ -84,6 +92,7 @@ if [[ $start == 1 ]]; then
 fi
 
 echo
-echo "Done. Enable the bar widget if you have not yet:"
+echo "Done. Open Soundgineer from the app launcher (or run: soundgineer)."
+echo "For the bar widget:"
 echo "  omarchy plugin enable $(jq -r .id "$src/manifest.json" 2>/dev/null || echo '<plugin id>')"
 echo "Try it from a terminal: sg-ctl load \"Super Saw Lead\" && sg-ctl note 60"

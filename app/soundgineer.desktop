@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Soundgineer
+GenericName=Synthesizer
+Comment=Wavetable synthesizer
+Exec=soundgineer
+Icon=audio-x-generic
+Terminal=false
+Categories=AudioVideo;Audio;Music;
+StartupWMClass=soundgineer

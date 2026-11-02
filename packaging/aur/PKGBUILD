@@ -9,7 +9,7 @@ pkgdesc="Wavetable synthesizer for Omarchy: headless PipeWire engine, CLI, VST3/
 arch=('x86_64' 'aarch64')
 url="https://github.com/noisyloop/omarchy-audio-synthesizer"
 license=('MIT')
-depends=('pipewire-jack' 'gcc-libs' 'glibc')
+depends=('pipewire-jack' 'qt6-declarative' 'gcc-libs' 'glibc')
 makedepends=('cmake' 'ninja' 'git' 'pkgconf')
 _dpf_commit=4238e1c7f0351bbe488d79f0899c540543ac7583
 source=("$pkgname::git+$url.git#tag=v$pkgver"
@@ -41,5 +41,6 @@ package() {
   cp -r build/bin/soundgineer.lv2 "$pkgdir/usr/lib/lv2/"
   cp -r build/bin/soundgineer.vst3 "$pkgdir/usr/lib/vst3/"
   install -Dm755 build/bin/soundgineer "$pkgdir/usr/bin/soundgineer-standalone"
+  install -Dm644 "$pkgname/app/soundgineer.desktop" "$pkgdir/usr/share/applications/soundgineer.desktop"
   install -Dm644 "$pkgname/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

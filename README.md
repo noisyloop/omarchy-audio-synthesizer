@@ -38,7 +38,7 @@ You need Omarchy 4 and the build tools
 ```bash
 omarchy plugin add https://github.com/noisyloop/omarchy-audio-synthesizer --enable
 cd ~/.config/omarchy/plugins/noisyloop.soundgineer
-./install.sh             # engine, sg-ctl, sg-render, presets, systemd units
+./install.sh             # engine, Soundgineer app, sg-ctl, sg-render, presets, systemd units
 ./install.sh --plugins   # optional: also VST3 (~/.vst3), LV2 (~/.lv2), standalone
 ```
 
@@ -47,9 +47,34 @@ to `~/.local/bin`, `~/.local/share/soundgineer` and
 `~/.local/share/systemd/user`. `./uninstall.sh` removes all of that and keeps
 your presets. An AUR `PKGBUILD` is in `packaging/aur/`.
 
+## Uninstall
+
+```bash
+cd ~/.config/omarchy/plugins/noisyloop.soundgineer
+./uninstall.sh                              # engine, app, CLI tools, launcher entry, units, VST3/LV2
+omarchy plugin remove noisyloop.soundgineer # the bar widget (deletes this folder, so run it last)
+```
+
+`uninstall.sh` stops `soundgineer.socket` and keeps your presets, favorites
+and last session. To delete those too:
+
+```bash
+rm -rf ~/.local/share/soundgineer ~/.local/state/soundgineer
+```
+
+If you installed with the AUR package, run `sudo pacman -Rns soundgineer` instead
+of `uninstall.sh`.
+
 ## Usage
 
-Open the panel from the bar, or bind
+![The Soundgineer window, live engine, Catppuccin theme](docs/images/app.png)
+
+**As an app:** open **Soundgineer** from the app launcher, or run
+`soundgineer`. It is the same panel in a normal window, themed from your
+current Omarchy theme. `Ctrl+Q` quits. The engine starts by itself on first
+connect.
+
+**From the bar:** open the panel from the bar widget, or bind
 `omarchy-shell noisyloop.soundgineer toggle` to a key. Play it with a MIDI keyboard
 (connected automatically) or with the computer keyboard in piano mode.
 
@@ -66,7 +91,7 @@ Open the panel from the bar, or bind
 | `p` | piano mode: `A W S E D F T G Y H U J K` play C–C, `Z` / `X` octave, `P` or `Esc` leave |
 | `w` | on an OSC section: pick a wavetable (built-in or WAV from `~/Music` / `~/.local/share/soundgineer/wavetables`); on NOISE: pick a sample |
 | `o` | power on/off |
-| `Esc` | close the panel |
+| `Esc` | close the panel (bar); in the window app `Ctrl+Q` quits |
 | Mod page | `Enter` pick source → target, `e` slot on/off, `x` delete |
 | Presets page | `Enter` load, `f` favorite |
 
@@ -105,6 +130,7 @@ omarchy-shell (Quickshell / QML)
   plugin/Widget.qml   bar face + KeyboardPanel popup (one per monitor)
   plugin/ui/          the panel (shared with demo/)
   plugin/Service.qml  singleton, JSON lines over $XDG_RUNTIME_DIR/soundgineer.sock
+app/ (soundgineer)    the same panel in a desktop window (Qt 6, QLocalSocket)
         │
         ▼  systemd --user soundgineer.socket (0600) starts …
 soundgineer-engine  C++20 · JACK API (pipewire-jack) · lock-free queues
