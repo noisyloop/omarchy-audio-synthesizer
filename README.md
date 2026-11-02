@@ -98,6 +98,22 @@ connect.
 Piano mode takes over the letter keys on purpose: `h j k` and `x` are
 navigation keys otherwise.
 
+### Finding presets
+
+There are 59 factory presets in 7 groups: Starter, Bass, Leads, Pads, Keys,
+Plucks and FX.
+
+- Press `6` to open the Presets page. The groups are columns: `h` / `l` move
+  between them, `j` / `k` move within one, and `Enter` loads.
+- Or press `/` and type part of a name (for example `bass`), then `Enter`.
+- From a terminal: `sg-ctl presets` lists them, and `sg-ctl load "Kalimba"`
+  loads one.
+
+If the Presets page shows only "f marks a favorite", the engine found no
+preset files. Check with `ls ~/.local/share/soundgineer/factory | wc -l`,
+which should print 59. If it doesn't, run `./install.sh` again from the
+plugin folder.
+
 ### MIDI
 
 Note on/off with velocity, pitch bend, mod wheel (CC 1), sustain (CC 64),
@@ -166,12 +182,11 @@ tools/omarchy-plugin-validate .
 
 ## Status and known gaps
 
-- Built and tested here: the engine, protocol and presets (`--dummy-audio`
-  mode), the parity suite, `install.sh` / `uninstall.sh`, and VST3 and LV2
-  discovery in Carla.
-- **Not yet tried on real hardware:** live PipeWire audio, MIDI devices, and
-  the plugin inside a running omarchy-shell. The container these were built
-  in has no sound server or Wayland session.
+- **Tested by people on Omarchy:** live audio through PipeWire works.
+- Tested in the build environment: the engine, protocol and presets
+  (`--dummy-audio` mode), the parity suite, `install.sh` / `uninstall.sh`, and
+  VST3 and LV2 discovery in Carla.
+- Not yet reported: MIDI hardware, and the bar widget inside omarchy-shell.
 - No custom GUI in VST3/LV2; hosts show their generic parameter view. The 59
   factory presets are VST3 programs and LV2 presets, and the mod matrix, LFO
   shapes and FX order are saved with host sessions.
