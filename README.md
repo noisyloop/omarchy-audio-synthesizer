@@ -195,7 +195,11 @@ tools/omarchy-plugin-validate .
 
 ## Status and known gaps
 
-- **Tested by people on Omarchy:** live audio through PipeWire works.
+- **Tested by people on Omarchy:**
+  - the Soundgineer window app
+  - live audio through PipeWire, playing to the default output
+  - all 59 factory presets on the Presets page
+  - reinstalling over an existing install with `./install.sh`
 - Tested in the build environment: the engine, protocol and presets
   (`--dummy-audio` mode), the parity suite, `install.sh` / `uninstall.sh`, and
   VST3 and LV2 discovery in Carla.
