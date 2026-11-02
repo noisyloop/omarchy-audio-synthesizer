@@ -101,6 +101,7 @@ int main(int argc, char** argv) {
     OmarchyTheme theme;
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("omarchyTheme", &theme);
+    engine.rootContext()->setContextProperty("startPage", qEnvironmentVariableIntValue("SG_PAGE"));  // dev/screenshots: 1-6
     engine.load(QUrl("qrc:/app/Main.qml"));
     if (engine.rootObjects().isEmpty()) return 1;
     // Testing/docs: SG_SCREENSHOT=out.png grabs the window after 2.5 s and quits.

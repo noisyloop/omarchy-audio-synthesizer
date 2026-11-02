@@ -83,7 +83,22 @@ int destFrom(const Json& v) {
 
 double round4(double v) { return std::round(v * 10000) / 10000; }
 
+const char* const kEmbeddedPresets[] = {
+#include "factory_presets.inc"
+};
+
 } // namespace
+
+const std::vector<Json>& Server::factory() {
+    static const std::vector<Json> list = [] {
+        std::vector<Json> out;
+        for (const char* text : kEmbeddedPresets) {
+            try { out.push_back(Json::parse(text)); } catch (...) {}
+        }
+        return out;
+    }();
+    return list;
+}
 
 Server::Server(Engine& engine, Paths paths, bool dummyAudio)
     : engine_(engine), paths_(std::move(paths)), dummyAudio_(dummyAudio) {
@@ -308,11 +323,21 @@ Json Server::presetListMessage() {
             } catch (...) {}
         }
     };
-    scan(paths_.factoryPresets, true);
+    for (const auto& j : factory()) {
+        Json item = Json::object();
+        const std::string name = sanitizeName(j["name"].asString());
+        item.set("name", name);
+        item.set("category", j["category"].isString() ? j["category"].asString() : "Factory");
+        item.set("factory", true);
+        item.set("favorite", std::find(favorites_.begin(), favorites_.end(), name) != favorites_.end());
+        item.set("path", "factory:" + name);
+        list.push(std::move(item));
+    }
     scan(paths_.userPresets, false);
     Json m = Json::object();
     m.set("type", "presetList");
     m.set("presets", std::move(list));
+    m.set("userDir", paths_.userPresets.string());
     return m;
 }
 
@@ -371,8 +396,19 @@ bool Server::loadPresetByName(const std::string& nameOrPath, std::string& error)
             return false;
         }
     };
-    // Paths are accepted only inside the preset directories.
-    for (const auto& dir : {paths_.factoryPresets, paths_.userPresets}) {
+    const std::string key = nameOrPath.rfind("factory:", 0) == 0 ? nameOrPath.substr(8) : nameOrPath;
+    for (const auto& j : factory()) {
+        if (sanitizeName(j["name"].asString()) != key) continue;
+        try {
+            engine_.loadPatch(Patch::fromJson(j));
+            return true;
+        } catch (const std::exception& e) {
+            error = e.what();
+            return false;
+        }
+    }
+    // User presets: paths are accepted only inside the user preset directory.
+    for (const auto& dir : {paths_.userPresets}) {
         std::error_code ec;
         if (!fs::is_directory(dir, ec)) continue;
         for (const auto& e : fs::directory_iterator(dir, ec)) {

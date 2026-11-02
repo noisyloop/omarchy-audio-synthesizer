@@ -109,10 +109,15 @@ Plucks and FX.
 - From a terminal: `sg-ctl presets` lists them, and `sg-ctl load "Kalimba"`
   loads one.
 
-If the Presets page shows only "f marks a favorite", the engine found no
-preset files. Check with `ls ~/.local/share/soundgineer/factory | wc -l`,
-which should print 59. If it doesn't, run `./install.sh` again from the
-plugin folder.
+The factory presets are built into the engine, so they can't go missing. If
+the Presets page is empty, the panel isn't getting answers from the engine,
+or an older engine is still running. Update, then restart it:
+
+```bash
+cd ~/.config/omarchy/plugins/noisyloop.soundgineer && git pull && ./install.sh
+systemctl --user restart soundgineer.service
+journalctl --user -u soundgineer | tail -3   # should say "59 factory presets built in"
+```
 
 ### MIDI
 
