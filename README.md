@@ -47,6 +47,24 @@ to `~/.local/bin`, `~/.local/share/soundgineer` and
 `~/.local/share/systemd/user`. `./uninstall.sh` removes all of that and keeps
 your presets. An AUR `PKGBUILD` is in `packaging/aur/`.
 
+## Uninstall
+
+```bash
+cd ~/.config/omarchy/plugins/noisyloop.soundgineer
+./uninstall.sh                              # engine, app, CLI tools, launcher entry, units, VST3/LV2
+omarchy plugin remove noisyloop.soundgineer # the bar widget (deletes this folder, so run it last)
+```
+
+`uninstall.sh` stops `soundgineer.socket` and keeps your presets, favorites
+and last session. To delete those too:
+
+```bash
+rm -rf ~/.local/share/soundgineer ~/.local/state/soundgineer
+```
+
+If you installed with the AUR package, run `sudo pacman -Rns soundgineer` instead
+of `uninstall.sh`.
+
 ## Usage
 
 ![The Soundgineer window, live engine, Catppuccin theme](docs/images/app.png)
