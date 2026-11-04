@@ -7,7 +7,7 @@
 #
 # Writes only to: ~/.cache/soundgineer (build), ~/.local/bin,
 # ~/.local/share/soundgineer, ~/.local/share/systemd/user,
-# ~/.local/share/applications, and with --plugins
+# ~/.local/share/applications, ~/.local/share/icons, and with --plugins
 # ~/.lv2 and ~/.vst3 (the standard per-user plugin folders hosts scan).
 set -euo pipefail
 
@@ -68,6 +68,7 @@ install -m 0644 "$src/packaging/systemd/soundgineer.service" "$data/systemd/user
 if [[ -x "$prefix/bin/soundgineer" ]]; then
   mkdir -p "$data/applications"
   sed "s|^Exec=soundgineer|Exec=$prefix/bin/soundgineer|" "$src/app/soundgineer.desktop" > "$data/applications/soundgineer.desktop"
+  install -Dm0644 "$src/app/icons/soundgineer.svg" "$data/icons/hicolor/scalable/apps/soundgineer.svg"
 else
   echo "!!  Qt 6 Quick not found, so the Soundgineer window app was skipped (sudo pacman -S --needed qt6-declarative)."
 fi
