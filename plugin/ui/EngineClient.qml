@@ -28,6 +28,8 @@ Item {
   property int voices: 0
   property real peakL: 0
   property real peakR: 0
+  property var midiInputs: []           // MIDI devices connected to the engine
+  property real midiEvents: 0           // messages received (counter; changes = activity)
   property var scope: []
   property var spectrum: []
   property int revision: 0
@@ -131,6 +133,7 @@ Item {
       values = msg.params || {}
       matrix = (msg.mods || []).map(function(m) { return { source: m.source, dest: m.dest, depth: m.depth, enabled: m.enabled !== false } })
       audioError = msg.audio && msg.audio.error ? String(msg.audio.error) : ""
+      if (msg.midi) midiInputs = msg.midi
       held = []
       revision++
       break
@@ -148,6 +151,10 @@ Item {
       voices = msg.voices | 0
       peakL = Number(msg.peakL) || 0
       peakR = Number(msg.peakR) || 0
+      if (msg.midiEvents !== undefined) midiEvents = Number(msg.midiEvents) || 0
+      break
+    case "midi":
+      midiInputs = msg.inputs || []
       break
     case "scope":
       scope = msg.left || []

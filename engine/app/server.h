@@ -47,6 +47,7 @@ private:
     void sendTelemetry();
     Json stateMessage();
     Json presetListMessage();
+    Json midiMessage();
     void setPower(bool on, Json* error);
     bool loadPresetByName(const std::string& name, std::string& error);
     void reply(Client& c, const char* type, const std::string& message);

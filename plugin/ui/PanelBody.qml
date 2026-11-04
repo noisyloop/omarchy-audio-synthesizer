@@ -289,7 +289,9 @@ FocusScope {
       if (t === "/") { win.openSearch(); event.accepted = true; return }
       if (t === "p") { win.setPiano(true); event.accepted = true; return }
       if (t === "w") { win.openImport(); event.accepted = true; return }
-      if (t === "o") { engine.setPower(!engine.powered); event.accepted = true; return }
+      // Shift+O, not o: power is easy to switch off by accident while
+      // typing notes before turning piano mode on.
+      if (t === "O") { engine.setPower(!engine.powered); event.accepted = true; return }
       var it = win.currentItem
       if (t === "r" && it && it.kind === "param") {
         engine.setNorm(it.id, Model.toNorm(Model.params[it.id], Model.params[it.id].def))
@@ -324,12 +326,44 @@ FocusScope {
         Column {
           width: 230
           spacing: 5
-          Text {
-            text: "SOUNDGINEER"
-            color: theme.dim
-            font.family: theme.fontFamily
-            font.pixelSize: theme.caption
-            font.letterSpacing: 2
+          // Title, and the MIDI device(s) playing it, with a light that
+          // blinks on every MIDI message (so a keyboard can be checked with
+          // the sound off).
+          Row {
+            width: parent.width
+            spacing: 8
+            Text {
+              id: title
+              text: "SOUNDGINEER"
+              color: theme.dim
+              font.family: theme.fontFamily
+              font.pixelSize: theme.caption
+              font.letterSpacing: 2
+            }
+            Rectangle {
+              id: midiLight
+              property bool lit: false
+              width: 6; height: 6; radius: 3
+              anchors.verticalCenter: title.verticalCenter
+              visible: (engine.midiInputs || []).length > 0
+              color: lit ? theme.accent : theme.faint
+              Timer { id: midiBlink; interval: 120; onTriggered: midiLight.lit = false }
+              Connections {
+                target: engine
+                function onMidiEventsChanged() { midiLight.lit = true; midiBlink.restart() }
+              }
+            }
+            Text {
+              width: parent.width - title.width - (midiLight.visible ? midiLight.width + 8 : 0) - 8
+              elide: Text.ElideRight
+              anchors.verticalCenter: title.verticalCenter
+              readonly property var inputs: engine.midiInputs || []
+              text: inputs.length === 0 ? "no MIDI device"
+                : "MIDI " + inputs[0] + (inputs.length > 1 ? " +" + (inputs.length - 1) : "")
+              color: theme.dim
+              font.family: theme.fontFamily
+              font.pixelSize: theme.caption
+            }
           }
           Text {
             width: parent.width
@@ -343,8 +377,8 @@ FocusScope {
           Row {
             spacing: 8
             Text {
-              text: engine.powered ? "● on" : "○ off"
-              color: engine.powered ? theme.accent : theme.dim
+              text: engine.powered ? "● on" : "○ off · Shift+O"
+              color: engine.powered ? theme.accent : theme.urgent
               font.family: theme.fontFamily
               font.pixelSize: theme.body
             }
@@ -605,7 +639,7 @@ FocusScope {
           font.pixelSize: theme.caption
           text: win.piano
             ? "PIANO  A W S E D F T G Y H U J K play · Z/X octave (C" + win.octave + ") · P or Esc leaves piano mode"
-            : "hjkl/arrows move · +/- adjust (_ fine) · Enter toggle/pick · r reset · Tab or 1-6 pages · / search · p piano · o power"
+            : "hjkl/arrows move · +/- adjust (_ fine) · Enter toggle/pick · r reset · Tab or 1-6 pages · / search · p piano · Shift+O power"
               + (Model.PAGES[win.page].key === "osc" ? " · w import wavetable / sample" : "")
               + (Model.PAGES[win.page].key === "mod" ? " · Enter assign · e on/off · x delete" : "")
               + (Model.PAGES[win.page].key === "presets" ? " · Enter load · f favorite" : "")
