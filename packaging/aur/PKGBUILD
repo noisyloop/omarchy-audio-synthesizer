@@ -42,5 +42,6 @@ package() {
   cp -r build/bin/soundgineer.vst3 "$pkgdir/usr/lib/vst3/"
   install -Dm755 build/bin/soundgineer "$pkgdir/usr/bin/soundgineer-standalone"
   install -Dm644 "$pkgname/app/soundgineer.desktop" "$pkgdir/usr/share/applications/soundgineer.desktop"
+  install -Dm644 "$pkgname/app/icons/soundgineer.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/soundgineer.svg"
   install -Dm644 "$pkgname/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
