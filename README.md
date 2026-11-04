@@ -132,6 +132,16 @@ journalctl --user -u soundgineer | tail -3   # should say "59 factory presets bu
 Note on/off with velocity, pitch bend, mod wheel (CC 1), sustain (CC 64),
 channel pressure, and CC 20–23 for macros 1–4.
 
+### Game controller
+
+Plug in a PS5 DualSense, PS4, Xbox or 8BitDo pad and run `sg-pad`. Left stick
+turns macros 1 and 2, the right stick bends pitch and pushes the mod wheel,
+R2 sweeps the filter, L2 adds drive, and the face buttons play a scale. On a
+DualSense the lightbar follows macro 1 and pulses with the output, and every
+note gives a small rumble. No MIDI setup, no root. To start it with your
+session: `systemctl --user enable --now soundgineer-pad`. Layout, remapping
+and the optional lightbar rule: [`docs/gamepad.md`](docs/gamepad.md).
+
 ### From a terminal
 
 ```bash

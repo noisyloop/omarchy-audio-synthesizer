@@ -64,6 +64,7 @@ rm -f "$data/soundgineer/factory/"*.json
 cp "$src"/presets/factory/*.json "$data/soundgineer/factory/"
 install -m 0644 "$src/packaging/systemd/soundgineer.socket" "$data/systemd/user/soundgineer.socket"
 install -m 0644 "$src/packaging/systemd/soundgineer.service" "$data/systemd/user/soundgineer.service"
+install -m 0644 "$src/packaging/systemd/soundgineer-pad.service" "$data/systemd/user/soundgineer-pad.service"
 
 if [[ -x "$prefix/bin/soundgineer" ]]; then
   mkdir -p "$data/applications"
@@ -97,3 +98,4 @@ echo "Done. Open Soundgineer from the app launcher (or run: soundgineer)."
 echo "For the bar widget:"
 echo "  omarchy plugin enable $(jq -r .id "$src/manifest.json" 2>/dev/null || echo '<plugin id>')"
 echo "Try it from a terminal: sg-ctl load \"Super Saw Lead\" && sg-ctl note 60"
+echo "Got a game controller? Plug it in and run: sg-pad   (docs/gamepad.md)"

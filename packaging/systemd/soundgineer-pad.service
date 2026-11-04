@@ -1,0 +1,17 @@
+[Unit]
+Description=Soundgineer game controller bridge (sg-pad)
+After=soundgineer.socket
+Wants=soundgineer.socket
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/sg-pad
+Restart=on-failure
+RestartSec=2
+# Talks only to the engine's Unix socket and reads /dev/input.
+RestrictAddressFamilies=AF_UNIX
+NoNewPrivileges=yes
+LockPersonality=yes
+
+[Install]
+WantedBy=default.target

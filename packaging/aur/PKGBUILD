@@ -38,6 +38,10 @@ package() {
   sed 's|%h/.local/bin/soundgineer-engine|/usr/bin/soundgineer-engine|' "$pkgname/packaging/systemd/soundgineer.service" \
     > soundgineer.service
   install -Dm644 soundgineer.service "$pkgdir/usr/lib/systemd/user/soundgineer.service"
+  sed 's|%h/.local/bin/sg-pad|/usr/bin/sg-pad|' "$pkgname/packaging/systemd/soundgineer-pad.service" \
+    > soundgineer-pad.service
+  install -Dm644 soundgineer-pad.service "$pkgdir/usr/lib/systemd/user/soundgineer-pad.service"
+  install -Dm644 "$pkgname/packaging/udev/70-soundgineer-pad.rules" "$pkgdir/usr/lib/udev/rules.d/70-soundgineer-pad.rules"
   cp -r build/bin/soundgineer.lv2 "$pkgdir/usr/lib/lv2/"
   cp -r build/bin/soundgineer.vst3 "$pkgdir/usr/lib/vst3/"
   install -Dm755 build/bin/soundgineer "$pkgdir/usr/bin/soundgineer-standalone"

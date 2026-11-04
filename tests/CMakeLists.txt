@@ -6,6 +6,13 @@ add_test(NAME core COMMAND sg_core_tests)
 
 add_test(NAME sg-render-version COMMAND sg-render --version)
 add_test(NAME sg-ctl-version COMMAND sg-ctl --version)
+
+add_executable(sg_pad_tests pad_tests.cpp)
+target_link_libraries(sg_pad_tests PRIVATE sg_padmap)
+add_test(NAME pad COMMAND sg_pad_tests)
+if(TARGET sg-pad)
+  add_test(NAME sg-pad-version COMMAND sg-pad --version)
+endif()
 if(TARGET soundgineer-engine)
   add_test(NAME engine-version COMMAND soundgineer-engine --version)
 endif()

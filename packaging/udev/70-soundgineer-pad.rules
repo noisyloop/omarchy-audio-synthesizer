@@ -1,0 +1,9 @@
+# Optional: lets sg-pad color the DualSense / DualShock 4 lightbar.
+# The kernel (hid-playstation, hid-sony) exposes the lightbar as a multicolor
+# LED that only root can write. This makes just its color and brightness files
+# writable; nothing else on the controller changes.
+#
+#   sudo install -m 0644 packaging/udev/70-soundgineer-pad.rules /etc/udev/rules.d/
+#   sudo udevadm control --reload && replug the controller
+ACTION=="add", SUBSYSTEM=="leds", KERNEL=="input*:rgb:indicator", \
+  RUN+="/bin/chmod 0666 /sys%p/multi_intensity /sys%p/brightness"

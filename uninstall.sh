@@ -8,11 +8,12 @@ data="${XDG_DATA_HOME:-$HOME/.local/share}"
 
 systemctl --user disable --now soundgineer.socket 2>/dev/null || true
 systemctl --user stop soundgineer.service 2>/dev/null || true
-rm -f "$data/systemd/user/soundgineer.socket" "$data/systemd/user/soundgineer.service"
+systemctl --user disable --now soundgineer-pad.service 2>/dev/null || true
+rm -f "$data/systemd/user/soundgineer.socket" "$data/systemd/user/soundgineer.service" "$data/systemd/user/soundgineer-pad.service"
 systemctl --user daemon-reload 2>/dev/null || true
 
 rm -f "$data/applications/soundgineer.desktop" "$data/icons/hicolor/scalable/apps/soundgineer.svg" "$prefix/bin/soundgineer"
-rm -f "$prefix/bin/soundgineer-engine" "$prefix/bin/sg-render" "$prefix/bin/sg-ctl" "$prefix/bin/soundgineer-standalone"
+rm -f "$prefix/bin/soundgineer-engine" "$prefix/bin/sg-render" "$prefix/bin/sg-ctl" "$prefix/bin/sg-pad" "$prefix/bin/soundgineer-standalone"
 rm -rf "$data/soundgineer/factory"
 rm -rf "$HOME/.lv2/soundgineer.lv2" "$HOME/.vst3/soundgineer.vst3"
 rm -rf "${XDG_CACHE_HOME:-$HOME/.cache}/soundgineer"
