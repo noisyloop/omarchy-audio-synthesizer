@@ -11,9 +11,11 @@
 #include <jack/jack.h>
 
 #include <atomic>
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <thread>
+#include <vector>
 
 namespace sg {
 
@@ -44,6 +46,14 @@ public:
     void stop();
     /** Link the outputs to PipeWire's current default sink (control thread). */
     void connectToDefaultOutput();
+    /** MIDI hotplug (control thread): connects MIDI sources that appeared
+     *  since the last call and refreshes midiInputs(). Cheap when nothing
+     *  changed; returns true when the list of connected inputs changed. */
+    bool syncMidi();
+    /** The MIDI sources connected to the engine, as readable names. */
+    const std::vector<std::string>& midiInputs() const noexcept { return midiInputs_; }
+    /** MIDI messages received since start (wraps); for activity lights. */
+    std::uint32_t midiEvents() const noexcept { return midiEvents_.load(std::memory_order_relaxed); }
     bool running() const noexcept { return running_; }
     double sampleRate() const noexcept { return sampleRate_; }
 
@@ -76,6 +86,8 @@ public:
 
 private:
     static int jackProcess(jack_nframes_t n, void* self);
+    static void jackPortRegistered(jack_port_id_t, int, void* self);
+    static void jackPortConnected(jack_port_id_t, jack_port_id_t, int, void* self);
     void processAudio(float* outL, float* outR, unsigned n, void* midiBuf);
     void drainCommands() noexcept;
     void handleMidi(const unsigned char* d, std::size_t size) noexcept;
@@ -97,6 +109,12 @@ private:
     jack_port_t* outL_ = nullptr;
     jack_port_t* outR_ = nullptr;
     jack_port_t* midiIn_ = nullptr;
+    // Set by JACK's notification thread when ports come, go or (dis)connect;
+    // syncMidi() does the work on the control thread (JACK forbids
+    // connecting from inside its callbacks).
+    std::atomic<bool> midiGraphChanged_{true};
+    std::atomic<std::uint32_t> midiEvents_{0};
+    std::vector<std::string> midiInputs_;
     std::thread dummy_;
     std::atomic<bool> dummyRun_{false};
     bool running_ = false;

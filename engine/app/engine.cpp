@@ -65,20 +65,85 @@ bool Engine::start(bool dummyAudio, std::string& error) {
         return false;
     }
     jack_set_process_callback(client_, &Engine::jackProcess, this);
+    jack_set_port_registration_callback(client_, &Engine::jackPortRegistered, this);
+    jack_set_port_connect_callback(client_, &Engine::jackPortConnected, this);
     if (jack_activate(client_) != 0) {
         error = "could not activate JACK client";
         jack_client_close(client_);
         client_ = nullptr;
         return false;
     }
-    // Auto-connect: stereo out to the default output (what other apps use),
-    // MIDI in from every hardware MIDI source (PipeWire bridges ALSA MIDI).
+    // Auto-connect: stereo out to the default output (what other apps use).
+    // MIDI in from every MIDI device is syncMidi()'s job, now and whenever
+    // one is plugged in.
     connectToDefaultOutput();
-    if (const char** ports = jack_get_ports(client_, nullptr, JACK_DEFAULT_MIDI_TYPE, JackPortIsOutput | JackPortIsPhysical)) {
-        for (const char** p = ports; *p; ++p) jack_connect(client_, *p, jack_port_name(midiIn_));
+    running_ = true;
+    midiGraphChanged_ = true;
+    syncMidi();
+    return true;
+}
+
+void Engine::jackPortRegistered(jack_port_id_t, int, void* self) {
+    static_cast<Engine*>(self)->midiGraphChanged_.store(true, std::memory_order_relaxed);
+}
+
+void Engine::jackPortConnected(jack_port_id_t, jack_port_id_t, int, void* self) {
+    static_cast<Engine*>(self)->midiGraphChanged_.store(true, std::memory_order_relaxed);
+}
+
+// "Midi-Bridge:Arturia KeyStep 37:(capture_0) KeyStep 37 MIDI 1" -> "Arturia
+// KeyStep 37: KeyStep 37 MIDI 1". PipeWire's Midi-Bridge carries every ALSA
+// MIDI device (USB keyboards, software keyboards), so its name says nothing.
+static std::string midiName(std::string n) {
+    const std::string bridge = "Midi-Bridge:";
+    if (n.rfind(bridge, 0) == 0) n.erase(0, bridge.size());
+    for (const char* tail : {" (capture)", "(capture)"}) {
+        const std::string t(tail);
+        if (n.size() > t.size() && n.compare(n.size() - t.size(), t.size(), t) == 0) n.erase(n.size() - t.size());
+    }
+    const auto cap = n.find(":(capture_");
+    if (cap != std::string::npos) {
+        const auto close = n.find(") ", cap);
+        if (close != std::string::npos) n = n.substr(0, cap) + ": " + n.substr(close + 2);
+    }
+    return n;
+}
+
+// MIDI sources to connect by themselves: devices (PipeWire marks Midi-Bridge
+// and Bluetooth MIDI ports physical), but not ALSA's "Midi Through" loopback,
+// which only echoes what other programs send it.
+static bool autoConnectable(jack_port_t* port, const std::string& name) {
+    if (!(jack_port_flags(port) & JackPortIsPhysical)) return false;
+    return name.find("Midi Through") == std::string::npos;
+}
+
+bool Engine::syncMidi() {
+    if (!client_ || !midiIn_) {
+        if (midiInputs_.empty()) return false;
+        midiInputs_.clear();
+        return true;
+    }
+    if (!midiGraphChanged_.exchange(false, std::memory_order_relaxed)) return false;
+
+    if (const char** ports = jack_get_ports(client_, nullptr, JACK_DEFAULT_MIDI_TYPE, JackPortIsOutput)) {
+        for (const char** p = ports; *p; ++p) {
+            jack_port_t* port = jack_port_by_name(client_, *p);
+            if (!port || jack_port_is_mine(client_, port) || !autoConnectable(port, *p)) continue;
+            if (jack_port_connected_to(midiIn_, *p)) continue;
+            if (jack_connect(client_, *p, jack_port_name(midiIn_)) == 0)
+                std::fprintf(stderr, "soundgineer-engine: midi in <- %s\n", midiName(*p).c_str());
+        }
         jack_free(ports);
     }
-    running_ = true;
+
+    std::vector<std::string> now;
+    if (const char** conns = jack_port_get_connections(midiIn_)) {
+        for (const char** c = conns; *c; ++c) now.push_back(midiName(*c));
+        jack_free(conns);
+    }
+    std::sort(now.begin(), now.end());
+    if (now == midiInputs_) return false;
+    midiInputs_ = std::move(now);
     return true;
 }
 
@@ -164,6 +229,7 @@ void Engine::stop() {
         if (dummy_.joinable()) dummy_.join();
     }
     running_ = false;
+    midiGraphChanged_ = true;  // syncMidi() empties the input list
     // Audio is stopped: apply whatever is still queued and silence voices.
     if (proc_) {
         drainCommands();
@@ -225,6 +291,7 @@ void Engine::processAudio(float* outL, float* outR, unsigned n, void* midiBuf) {
 
 void Engine::handleMidi(const unsigned char* d, std::size_t size) noexcept {
     if (size < 2) return;
+    midiEvents_.fetch_add(1, std::memory_order_relaxed);
     const int status = d[0] & 0xF0;
     const int a = d[1] & 0x7F;
     const int b = size > 2 ? (d[2] & 0x7F) : 0;
@@ -375,7 +442,12 @@ void Engine::loadPatch(const Patch& p) {
     syncPatch(sink, patch_, bank_);
 }
 
-void Engine::noteOn(int note, double vel) { Command c; c.type = Command::NoteOn; c.a = note; c.x = vel; push(c); }
+// Notes played while the power is off are dropped: applied straight to the
+// stopped processor, they'd start voices that all sound at power-on.
+void Engine::noteOn(int note, double vel) {
+    if (!running_) return;
+    Command c; c.type = Command::NoteOn; c.a = note; c.x = vel; push(c);
+}
 void Engine::noteOff(int note) { Command c; c.type = Command::NoteOff; c.a = note; push(c); }
 void Engine::sustain(bool down) { Command c; c.type = Command::Sustain; c.flag = down; push(c); }
 void Engine::pitchBend(double v) { Command c; c.type = Command::PitchBend; c.x = v; push(c); }

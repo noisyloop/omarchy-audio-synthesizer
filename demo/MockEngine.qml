@@ -14,6 +14,8 @@ QtObject {
       Model.PRESETS[cat].forEach(function(n) { out.push({ name: n, category: cat }) })
     return out
   }
+  property var midiInputs: ["Arturia KeyStep 37: KeyStep 37 MIDI 1"]
+  property real midiEvents: 0
   function setPower(on) { powered = on; if (!on) held = [] }
   property var files: ({ wavetable: [], sample: [] })
   function refreshFiles() {

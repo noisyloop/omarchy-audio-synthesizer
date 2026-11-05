@@ -90,7 +90,7 @@ connect.
 | `/` | search parameters and presets (type to filter, arrows, Enter) |
 | `p` | piano mode: `A W S E D F T G Y H U J K` play C–C, `Z` / `X` octave, `P` or `Esc` leave |
 | `w` | on an OSC section: pick a wavetable (built-in or WAV from `~/Music` / `~/.local/share/soundgineer/wavetables`); on NOISE: pick a sample |
-| `o` | power on/off |
+| `Shift+O` | power on/off |
 | `Esc` | close the panel (bar); in the window app `Ctrl+Q` quits |
 | Mod page | `Enter` pick source → target, `e` slot on/off, `x` delete |
 | Presets page | `Enter` load, `f` favorite |
@@ -102,7 +102,7 @@ navigation keys otherwise.
 
 Soundgineer plays to your **default output**, the same one other apps use.
 It picks that up when the engine starts, whenever the app or bar panel opens,
-and when you toggle power (`o`, or right-click the bar widget). If you switch
+and when you toggle power (`Shift+O`, or right-click the bar widget). If you switch
 outputs while it's open, press `o` twice. To see where it's connected:
 `pw-link -l | grep -A1 Soundgineer:out`.
 
@@ -131,6 +131,15 @@ journalctl --user -u soundgineer | tail -3   # should say "59 factory presets bu
 
 Note on/off with velocity, pitch bend, mod wheel (CC 1), sustain (CC 64),
 channel pressure, and CC 20–23 for macros 1–4.
+
+Plug a MIDI keyboard in, before or after Soundgineer starts, and the engine
+connects it by itself: USB and other ALSA MIDI devices (PipeWire brings them
+in as JACK MIDI), Bluetooth MIDI, and software keyboards. The panel shows
+the connected device next to its title, with a light that blinks on every
+MIDI message, so you can check a keyboard with the sound off. To test without
+hardware, `tests/midi/fake-keyboard.py` is a stand-in keyboard, and
+`tests/midi/hotplug-test.py build/engine/app/soundgineer-engine` checks the
+whole path on your PipeWire.
 
 ### From a terminal
 
@@ -203,7 +212,7 @@ tools/omarchy-plugin-validate .
 - Tested in the build environment: the engine, protocol and presets
   (`--dummy-audio` mode), the parity suite, `install.sh` / `uninstall.sh`, and
   VST3 and LV2 discovery in Carla.
-- Not yet reported: MIDI hardware, and the bar widget inside omarchy-shell.
+- Not yet reported: real MIDI hardware (the path is tested with an ALSA software keyboard).
 - No custom GUI in VST3/LV2; hosts show their generic parameter view. The 59
   factory presets are VST3 programs and LV2 presets, and the mod matrix, LFO
   shapes and FX order are saved with host sessions.

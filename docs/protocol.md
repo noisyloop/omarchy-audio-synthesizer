@@ -32,7 +32,7 @@ normalized `0..1`. Anywhere an index is accepted, a string id works too.
 | → engine | `lfoShape` | `{ "lfo": 0, "points": [{ "x": 0, "y": 0, "power": 0 }, ...] }` (≤ 64 points) |
 | → engine | `fxOrder` | `{ "order": ["chorus", "phaser", "flanger", "delay", "reverb", "eq", "comp", "fxdist"] }` or indices |
 | → engine | `allNotesOff` | `{}` |
-| engine → | `status` | `{ "voices": 2, "peakL": 0.41, "peakR": 0.39, "sources": [24 floats] }` |
+| engine → | `status` | `{ "voices": 2, "peakL": 0.41, "peakR": 0.39, "midiEvents": 1234, "sources": [24 floats] }`. `midiEvents` counts MIDI messages received (it wraps); a change means MIDI activity. |
 | engine → | `scope` | `{ "left": [256], "right": [256], "spectrum": [48 bins, 0..1 over −80..0 dB] }` |
 
 Telemetry is sent at ≤ 30 Hz and only to clients that subscribed. Values are
@@ -46,7 +46,7 @@ messages are replaced by `setWavetable` / `setSample` with file paths.
 | → engine | `hello` | `{ "client": "omarchy-plugin", "protocol": 1 }` |
 | engine → | `hello` | `{ "version": "0.1.0", "protocol": 1 }` |
 | → engine | `getState` | `{}` |
-| engine → | `state` | `{ "powered", "audio": { "running", "sampleRate", "backend", "error"? }, "patchName", "category", "params": { id: value }, "mods": [...], "lfoShapes": [[...] x8], "fxOrder": [ids] }` |
+| engine → | `state` | `{ "powered", "audio": { "running", "sampleRate", "backend", "error"? }, "midi": [names], "patchName", "category", "params": { id: value }, "mods": [...], "lfoShapes": [[...] x8], "fxOrder": [ids] }` |
 | → engine | `subscribe` | `{ "status": true, "scope": true }` |
 | → engine | `power` | `{ "on": false }`: releases the PipeWire stream and MIDI port; the socket stays up. Replies with `state` to everyone. |
 | → engine | `setWavetable` | `{ "osc": 0, "name": "Vocal" }` or `{ "osc": 0, "path": "/path/table.wav" }` (Serum-style WAV → Custom slot) |
@@ -60,6 +60,7 @@ messages are replaced by `setWavetable` / `setSample` with file paths.
 | engine → | `saved` | `{ "path": "..." }` |
 | → engine | `setFavorite` | `{ "name": "Kalimba", "on": true }` → `$XDG_STATE_HOME/soundgineer/favorites.json` |
 | engine → | `param` | `{ "id": "macro1.value", "value": 0.5 }` when MIDI CC 20–23 moves a macro |
+| engine → | `midi` | `{ "inputs": ["Arturia KeyStep 37: KeyStep 37 MIDI 1", ...] }` to everyone, whenever a MIDI device is plugged in or out (or power changes) |
 | engine → | `error` | `{ "message": "..." }` |
 
 The current patch is saved to `$XDG_STATE_HOME/soundgineer/session.json` on

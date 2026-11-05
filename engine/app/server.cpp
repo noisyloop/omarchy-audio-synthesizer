@@ -162,6 +162,7 @@ void Server::run(const volatile bool& stop) {
             clients_.erase(std::remove_if(clients_.begin(), clients_.end(), [](const Client& c) { return c.fd < 0; }), clients_.end());
         }
         engine_.collectGarbage();
+        if (engine_.syncMidi()) broadcast(midiMessage());
         for (const auto& ev : engine_.syncAudioEvents()) {
             Json m = Json::object();
             m.set("type", "param");
@@ -238,6 +239,7 @@ void Server::sendTelemetry() {
     status.set("voices", t.voices);
     status.set("peakL", round4(t.peakL));
     status.set("peakR", round4(t.peakR));
+    status.set("midiEvents", static_cast<double>(engine_.midiEvents()));
     Json src = Json::array();
     for (float v : t.sources) src.push(round4(v));
     status.set("sources", std::move(src));
@@ -290,6 +292,7 @@ Json Server::stateMessage() {
     audio.set("backend", dummyAudio_ ? "dummy" : "jack");
     if (!audioError_.empty()) audio.set("error", audioError_);
     m.set("audio", std::move(audio));
+    m.set("midi", midiMessage()["inputs"]);
     m.set("patchName", p.name);
     m.set("category", p.category);
     const Json pj = p.toJson();
@@ -297,6 +300,16 @@ Json Server::stateMessage() {
     m.set("mods", pj["mods"]);
     m.set("lfoShapes", pj["lfoShapes"]);
     m.set("fxOrder", pj["fxOrder"]);
+    return m;
+}
+
+// The MIDI devices playing the engine: {"type":"midi","inputs":["name", ...]}.
+Json Server::midiMessage() {
+    Json m = Json::object();
+    m.set("type", "midi");
+    Json inputs = Json::array();
+    for (const auto& name : engine_.midiInputs()) inputs.push(name);
+    m.set("inputs", std::move(inputs));
     return m;
 }
 

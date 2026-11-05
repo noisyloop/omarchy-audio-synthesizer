@@ -23,7 +23,7 @@ mock engine, so what you see here is what the plugin shows.
 | `Tab` / `Shift+Tab` / `1`–`6` | pages: Osc · Filter · Shape · Mod · FX · Presets |
 | `/` | search parameters and presets (type to filter, arrows, Enter) |
 | `p` | piano mode: `A W S E D F T G Y H U J K` play, `Z`/`X` octave, `P`/`Esc` leave |
-| `o` | power |
+| `Shift+O` | power |
 | Mod page | `Enter` pick source → target, `e` slot on/off, `x` delete |
 | Presets page | `Enter` load, `f` favorite |
 

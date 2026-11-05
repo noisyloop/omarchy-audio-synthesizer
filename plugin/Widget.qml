@@ -59,11 +59,10 @@ Panel {
     if (service) service.setScopeWanted(opened)
     if (opened) {
       Qt.callLater(function() {
-        var c = panel.loadedContent
-        if (c && c.body) c.body.forceActiveFocus()
+        if (keyCatcher.body) keyCatcher.body.forceActiveFocus()
       })
-    } else if (panel.loadedContent && panel.loadedContent.body) {
-      panel.loadedContent.body.reset()   // release piano notes
+    } else if (keyCatcher.body) {
+      keyCatcher.body.reset()   // release piano notes
     }
   }
 
@@ -71,7 +70,9 @@ Panel {
     id: button
     anchors.fill: parent
     bar: root.bar
-    labelText: root.patchName
+    // Omarchy 4's bar buttons are icon-only (no labelText), so the patch name
+    // and power state are in the tooltip.
+    tooltipText: root.ready ? root.patchName + (root.powered ? "" : " (off)") + "\nClick: open · Right-click: power" : "Soundgineer (engine not running)"
     iconComponent: Component {
       // Power ring + voice dot + stereo peak bars.
       Item {
@@ -79,13 +80,13 @@ Panel {
         readonly property color off: Qt.darker(root.barForeground, 1.6)
         Rectangle {
           id: ring
-          width: button.iconSize * 0.62
+          width: button.opticalSize * 0.62
           height: width
           radius: width / 2
           anchors.verticalCenter: parent.verticalCenter
           x: (parent.width - width - bars.width - 3) / 2
           color: root.ready && root.service.voices > 0 ? parent.on : "transparent"
-          border.width: Math.max(1, Math.round(button.iconSize / 9))
+          border.width: Math.max(1, Math.round(button.opticalSize / 9))
           border.color: root.powered ? parent.on : parent.off
         }
         Row {
@@ -98,7 +99,7 @@ Panel {
             model: 2
             Rectangle {
               required property int index
-              width: Math.max(2, Math.round(button.iconSize / 7))
+              width: Math.max(2, Math.round(button.opticalSize / 7))
               height: Math.max(1, ring.height * Math.min(1, root.ready ? (index === 0 ? root.service.peakL : root.service.peakR) : 0))
               anchors.bottom: parent.bottom
               color: Commons.Color.accent
@@ -119,11 +120,12 @@ Panel {
     owner: root
     bar: root.bar
     open: root.opened
-    focusTarget: panel.loadedContent && panel.loadedContent.body ? panel.loadedContent.body : null
+    focusTarget: keyCatcher.body ? keyCatcher.body : keyCatcher
     contentWidth: panel.fittedContentWidth(Style.space(860))
     contentHeight: panel.fittedContentHeight(Style.space(600), Style.space(600))
 
-    content: PanelKeyCatcher {
+    // Omarchy 4: the panel takes its content as children (no `content:`).
+    PanelKeyCatcher {
       id: keyCatcher
       property alias body: bodyLoader.item
       anchors.fill: parent
